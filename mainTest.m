@@ -1,0 +1,1 @@
+[mean, std] = efficientEstimator(@pwrPriorFixed, 1, 10);
