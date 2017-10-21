@@ -18,8 +18,7 @@ for i = 1 : length(refCsts)
     % Noise level at reference stimulus contrast level
     refCorst = refCsts(i);
     refNoise = noiseLevel(cstLevel == refCorst);
-    for j = 1 : length(refSpeed)
-        
+    for j = 1 : length(refSpeed)        
         refV  = refSpeed(j);
         
         % Test stimulus for one reference stimulus

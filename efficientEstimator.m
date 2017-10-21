@@ -28,7 +28,7 @@ mean = trapz(estimates, estimates .* esmtProb);
 % Special implementation for power law prior 
 % and positive reference and test speed
     function [esti] = decoder(msmt)        
-        estSpc   = (msmt - baseStd / prior(msmt)) : 0.001 : msmt;                
+        estSpc   = (msmt - baseStd / prior(msmt)) : 0.01 : msmt;                
         estPrior = prior(estSpc);
         estStd   = baseStd ./ estPrior;
         estLlhd  = zeros(1, length(estSpc));
