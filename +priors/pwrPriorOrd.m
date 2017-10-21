@@ -1,7 +1,7 @@
-function [ priorProb ] = pwrPrior(support, c0, c1, c2)
+function [ priorProb ] = pwrPriorOrd(support, c1, c2)
 
 % PWRPRIOR   Power law prior of the form 
-%            p(v) = 1 / (c1 v ^ c0 + c2)
+%            p(v) = 1 / (c1 v + c2)
 
 persistent const1; persistent const2; persistent nrmConst;
 domain = -50 : 0.001 : 50; % Normalization defined over function domain

@@ -1,29 +1,45 @@
-function logll = afcCostfunc(prior, refV, refNoise, testV, testNoise, response)
+function negLikelihood = afcCostfunc(prior, subjectData, noisePara)
 
-% AFCCOSTFUNC Cost function for two-alternatice forced choice task with 
-%             fixed reference stimulus and corresponding test stimulus.
-%             Compute the log likelihood of the data. 
+%AFCCOSTFUN Compute the negative log likelihood over the whole dataset     
 
-[refMean, refStd] = efficientEstimator(prior, refNoise, refV);
-probFaster = zeros(1, length(testV));
+cstLevel   = [0.05, 0.075, 0.1, 0.2, 0.4, 0.5, 0.8];
+noiseLevel = noisePara(1 : length(cstLevel));
 
-for i = 1 : length(testV)
-    [testMean, testStd] = efficientEstimator(prior, testNoise(i), testV(i));
-    
-    %SDT   P(Test > Ref) = 1/2 erfc(-D/2)
-    dPrime = (testMean - refMean) / (sqrt((testStd ^ 2 + refStd ^ 2 ) / 2));
-    probFaster(i) = 0.5 * erfc(-0.5 * dPrime);        
+% Two ref contrast level and six speed level
+refCsts  = [0.075, 0.5];
+refSpeed = [0.5, 1, 2, 4, 8, 12];
+
+% Row index: 1 ref speed; 2 ref contrast;
+% 3 test speed; 4 test contrast;
+% 9 test stimulus seen faster
+
+sumLikelihood = 0;
+for i = 1 : length(refCsts)
+    % Noise level at reference stimulus contrast level
+    refCorst = refCsts(i);
+    refNoise = noiseLevel(cstLevel == refCorst);
+    for j = 1 : length(refSpeed)
+        
+        refV  = refSpeed(j);
+        
+        % Test stimulus for one reference stimulus
+        testData = subjectData([3, 4, 9], subjectData(1, :) == refV ...
+            & subjectData(2, :) == refCorst);
+        
+        % Re-organize data for function call
+        testV = testData(1, :);
+        [~, idx] = ismember(testData(2, :),  cstLevel);
+        testNoise = noiseLevel(idx);
+        testResponse = testData(3, :);
+        
+        % Add log likelihood for different reference stimulus
+        sumLikelihood = ...
+            sumLikelihood + afcCostfuncFixedRef(prior, refV, refNoise, testV, testNoise, testResponse);
+    end
 end
 
-% Probability of the response 
-probRes = probFaster .* response + (1 - probFaster) .* (1 - response);
-
-% Avoid log(0) for numerical issuses
-% Should consider remove outliers 
-zeroThreshold = 1e-4;
-probRes(probRes <= zeroThreshold) = zeroThreshold;
-
-% Sum of the log likelihood
-logll = sum(log(probRes));
-
+negLikelihood = -sumLikelihood;
 end
+
+
+
