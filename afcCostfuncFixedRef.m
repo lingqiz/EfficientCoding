@@ -5,15 +5,19 @@ function logll = afcCostfuncFixedRef(prior, refV, refNoise, testV, testNoise, re
 %             Compute the log likelihood of the data. 
 
 [refMean, refStd] = efficientEstimator(prior, refNoise, refV);
-probFaster = zeros(1, length(testV));
+
+allTestMean = zeros(1, length(testV));
+allTestStd  = zeros(1, length(testV));
 
 for i = 1 : length(testV)
     [testMean, testStd] = efficientEstimator(prior, testNoise(i), testV(i));
-    
-    %SDT   P(Test > Ref) = 1/2 erfc(-D/2)
-    dPrime = (testMean - refMean) / (sqrt((testStd ^ 2 + refStd ^ 2 ) / 2));
-    probFaster(i) = 0.5 * erfc(-0.5 * dPrime);        
+    allTestMean(i) = testMean; allTestStd(i) = testStd;           
 end
+
+%SDT   P(Test > Ref) = 1/2 erfc(-D/2)
+dPrimes = (allTestMean - refMean * ones(1, length(testV))) ./ ...
+    (sqrt((allTestStd .^ 2 + refStd ^ 2 * ones(1, length(testV))) / 2));
+probFaster = 0.5 * erfc(-0.5 * dPrimes);        
 
 % Probability of the response 
 probRes = probFaster .* response + (1 - probFaster) .* (1 - response);

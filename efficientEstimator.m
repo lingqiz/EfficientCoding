@@ -27,15 +27,23 @@ mean = trapz(estimates, estimates .* esmtProb);
 
 % Special implementation for power law prior 
 % and positive reference and test speed
-    function [esti] = decoder(msmt)        
-        estSpc   = (msmt - baseStd / prior(msmt)) : 0.01 : msmt;                
+    function [esti] = decoder(msmt)
+        sampleSize = 50; minStep = 0.01; 
+        baseStdMsmt = baseStd / prior(msmt);
+        stepSize = baseStdMsmt / sampleSize;
+        
+        if stepSize >= minStep
+           estSpc = (msmt - baseStdMsmt) : stepSize : msmt;
+        else
+           estSpc = (msmt - baseStdMsmt) : minStep : msmt;
+        end
+
         estPrior = prior(estSpc);
         estStd   = baseStd ./ estPrior;
-        estLlhd  = zeros(1, length(estSpc));
         
-        for i = 1 : length(estSpc)            
-            estLlhd(i) = normpdf(msmt, estSpc(i), estStd(i));
-        end
+        % Compute the likelihood function for varying mu and sigma 
+        vecMsmt = msmt * ones(1, length(estSpc));
+        estLlhd  = exp(-0.5 * ((vecMsmt - estSpc)./estStd).^2) ./ (sqrt(2*pi) .* estStd);
         
         % Max posterior, L0 loss
         estScore = estPrior .* estLlhd; [~, maxIdx] = max(estScore);
