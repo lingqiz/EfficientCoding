@@ -1,10 +1,10 @@
 % Load Dataset, Initialization, Start Fitting Procedure
 dataDir = './NN2006/';
 load(strcat(dataDir, 'SUB1.mat'));
-% load(strcat(dataDir, 'SUB2.mat'));
+load(strcat(dataDir, 'SUB2.mat'));
 
-noiseLB = 1e-4;
-noiseUB = 1.2;
+noiseLB = 1e-2;
+noiseUB = 4;
 
 crstLevel = 7;
 vlb = ones(1, crstLevel) * noiseLB;

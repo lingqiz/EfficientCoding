@@ -28,7 +28,7 @@ mean = trapz(estimates, estimates .* esmtProb);
 % Special implementation for power law prior 
 % and positive reference and test speed
     function [esti] = decoder(msmt)
-        sampleSize = 50; minStep = 0.01; 
+        sampleSize = 100; minStep = 0.01; 
         baseStdMsmt = baseStd / prior(msmt);
         stepSize = baseStdMsmt / sampleSize;
         
