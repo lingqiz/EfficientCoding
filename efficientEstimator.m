@@ -14,7 +14,8 @@ measurementL = vProb - 3 * probStd;
 measurementH = vProb + 3 * probStd;
 
 % encoding
-measurements = measurementL : 0.01 : measurementH;
+msmtSampleSize = 100; msmtStepSize = (measurementH - measurementL) / msmtSampleSize;
+measurements = measurementL : msmtStepSize : measurementH;
 msmtProb     = normpdf(measurements, vProb, probStd);
 
 % decoding for each measurement
@@ -28,26 +29,30 @@ mean = trapz(estimates, estimates .* esmtProb);
 % Special implementation for power law prior 
 % and positive reference and test speed
     function [esti] = decoder(msmt)
-        sampleSize = 100; minStep = 0.01; 
-        baseStdMsmt = baseStd / prior(msmt);
-        stepSize = baseStdMsmt / sampleSize;
+        sampleSize = 100; 
+        baseStdMsmt = baseStd / prior(msmt);        
         
-        if stepSize >= minStep
-           estSpc = (msmt - baseStdMsmt) : stepSize : msmt;
-        else
-           estSpc = (msmt - baseStdMsmt) : minStep : msmt;
+        if msmt >= 0
+            estSpaceLB = msmt - baseStdMsmt;
+            stepSize = (msmt - estSpaceLB) / sampleSize;
+            estSpc = estSpaceLB : stepSize : msmt;
+            
+        else % msmt < 0
+            estSpaceUB = msmt + baseStdMsmt;
+            stepSize = (estSpaceUB - msmt) / sampleSize;
+            estSpc = msmt : stepSize : estSpaceUB;                        
         end
-
+        
         estPrior = prior(estSpc);
         estStd   = baseStd ./ estPrior;
         
         % Compute the likelihood function for varying mu and sigma 
         vecMsmt = msmt * ones(1, length(estSpc));
-        estLlhd  = exp(-0.5 * ((vecMsmt - estSpc)./estStd).^2) ./ (sqrt(2*pi) .* estStd);
+        estLlhd  = exp(-0.5 * ((vecMsmt - estSpc)./ estStd).^2) ./ (sqrt(2*pi) .* estStd);
         
         % Max posterior, L0 loss
         estScore = estPrior .* estLlhd; [~, maxIdx] = max(estScore);
-        esti = estSpc(maxIdx);      
+        esti = estSpc(maxIdx);
     end
 
 end
