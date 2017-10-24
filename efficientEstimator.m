@@ -1,4 +1,4 @@
-function [mean, std] = efficientEstimator(prior, baseNoise, vProb)
+function [esti, std] = efficientEstimator(prior, baseNoise, vProb)
 
 % EFFICIENTESTIMATOR Compute p(v'|v) with efficient 
 %            coding constrain and Gaussian likelihood
@@ -9,27 +9,12 @@ function [mean, std] = efficientEstimator(prior, baseNoise, vProb)
 vBaseNoise = 1; baseStd = prior(vBaseNoise) * baseNoise;
 probStd = baseStd / prior(vProb); std = probStd;
 
-% Consider measurements in the three sigma range
-measurementL = vProb - 3 * probStd;
-measurementH = vProb + 3 * probStd;
-
-% encoding
-msmtSampleSize = 100; msmtStepSize = (measurementH - measurementL) / msmtSampleSize;
-measurements = measurementL : msmtStepSize : measurementH;
-msmtProb     = normpdf(measurements, vProb, probStd);
-
-% decoding for each measurement
-% change of variable to p(v'|v)
-estimates = arrayfun(@decoder, measurements);
-esmtProb  = abs(gradient(measurements, estimates)) .* msmtProb;
-
-% mean value of the estimation distribution p(v'|v)
-mean = trapz(estimates, estimates .* esmtProb);
+measurement = vProb; esti = decoder(measurement);
 
 % Special implementation for power law prior 
 % and positive reference and test speed
     function [esti] = decoder(msmt)
-        sampleSize = 100; 
+        sampleSize = 400; 
         baseStdMsmt = baseStd / prior(msmt);        
         
         if msmt >= 0
