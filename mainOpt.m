@@ -4,7 +4,7 @@ load(strcat(dataDir, 'SUB1.mat'));
 load(strcat(dataDir, 'SUB2.mat'));
 
 noiseLB = 1e-4; noiseUB = 2.2;
-c0LB = 0.4;   c0UB = 2.4;  c0Init = 1.0;
+c0LB = 0.4;   c0UB = 2.4;  c0Init = 1.8;
 c1LB = 0.01;  c1UB = 10; c1Init = 1;
 c2LB = 0.001; c2UB = 100; c2Init = 0.3;
 
