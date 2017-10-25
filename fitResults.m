@@ -1,10 +1,11 @@
+
 c0 = 0.6252; c1 = 2.7478; c2 = 0.1483;
 noiseLevel = [0.8425, 0.65, 0.5985, 0.3935, 0.3916, 0.3297, 0.2910];
 plotResults(c0, c1, c2, noiseLevel);
 
-c0 = 0.87; c1 = 1.27; c2 = 0.4187;
-noiseLevel = [1.4137; 1.0337; 0.9751; 0.6615; 0.5028; 0.3940; 0.0747];
-plotResults(c0, c1, c2, noiseLevel);
+% c0 = 0.87; c1 = 1.27; c2 = 0.4187;
+% noiseLevel = [1.4137; 1.0337; 0.9751; 0.6615; 0.5028; 0.3940; 0.0747];
+% plotResults(c0, c1, c2, noiseLevel);
 
 function plotResults(c0, c1, c2, noiseLevel)
 crstLevel  = [0.05, 0.075, 0.1, 0.2, 0.4, 0.5, 0.8];
@@ -15,11 +16,11 @@ nrmConst  = 1.0 / (trapz(domain, priorUnm));
 
 prior = @(support) (1 ./ (c1 * (abs(support) .^ c0) + c2)) * nrmConst; 
 
-% shape of prior 
-priorSupport = (0.2 : 0.01 : 15);
-plot(priorSupport, prior(priorSupport));
+% Shape of Prior 
+priorSupport = (0 : 0.01 : 15);
+plot(log(priorSupport), log(prior(priorSupport)));
 
-% matching speed, c = 0.075 or 0.5
+% Matching Speed, C = 0.075 or 0.5
 plotMatchSpeed(0.075); plotMatchSpeed(0.5); 
 
 figure; hold on;
