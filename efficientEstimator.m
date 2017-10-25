@@ -1,4 +1,4 @@
-function [esti, std] = efficientEstimator(prior, baseNoise, vProb)
+function [mean, std] = efficientEstimator(prior, baseNoise, vProb)
 
 % EFFICIENTESTIMATOR Compute p(v'|v) with efficient 
 %            coding constrain and Gaussian likelihood
@@ -9,7 +9,7 @@ function [esti, std] = efficientEstimator(prior, baseNoise, vProb)
 vBaseNoise = 1; baseStd = prior(vBaseNoise) * baseNoise;
 probStd = baseStd / prior(vProb); std = probStd;
 
-measurement = vProb; esti = decoder(measurement);
+measurement = vProb; mean = decoder(measurement);
 
 % Special implementation for power law prior 
 % and positive reference and test speed
