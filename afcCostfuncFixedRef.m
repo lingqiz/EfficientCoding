@@ -17,7 +17,7 @@ end
 %SDT   P(Test > Ref) = 1/2 erfc(-D/2)
 dPrimes = (allTestMean - refMean * ones(1, length(testV))) ./ ...
     (sqrt((allTestStd .^ 2 + refStd ^ 2 * ones(1, length(testV))) / 2));
-probFaster = 0.5 * erfc(-0.5 * dPrimes);        
+probFaster = 0.5 * erfc(-0.5 * dPrimes);
 
 % Probability of the response 
 probRes = probFaster .* response + (1 - probFaster) .* (1 - response);
