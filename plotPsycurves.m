@@ -1,3 +1,4 @@
+load('FinalFitRes.mat');
 
 plotPsycurve(paraSub1, weibullFit1, 'Subject 1');
 plotPsycurve(paraSub2, weibullFit2, 'Subject 2');

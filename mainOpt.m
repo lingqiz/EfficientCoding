@@ -16,8 +16,9 @@ noiseInit = 0.5 + rand(1, crstLevel);
 paraInit = [c0Init, c1Init, c2Init, noiseInit];
 objFunc1 = @(para)costfuncWrapperPwr(subject1, para);
 
-% options = optimoptions('particleswarm', 'Display', 'iter');
-% [paraSub1, fval, ~] = particleswarm(objFunc1, length(paraInit), vlb, vub, options);
+% Praticle Swarm Optimization
+options = optimoptions('particleswarm', 'Display', 'iter');
+[~, ~, ~] = particleswarm(objFunc1, length(paraInit), vlb, vub, options);
 
 % Optimization 
 opts = optimset('fminsearch');
@@ -25,10 +26,10 @@ opts.Display = 'iter';
 opts.TolX = 1.e-8;
 opts.MaxFunEvals = 2000;
 
-% [paraSub1, fval1, exitflag1, output1] = fminsearchbnd(objFunc1, paraInit, vlb, vub, opts);
+[paraSub1, fval1, exitflag1, output1] = fminsearchbnd(objFunc1, paraInit, vlb, vub, opts);
 
-% noiseInit = 0.5 + rand(1, crstLevel);
-% paraInit = [c0Init, c1Init, c2Init, noiseInit];
+noiseInit = 0.5 + rand(1, crstLevel);
+paraInit = [c0Init, c1Init, c2Init, noiseInit];
 
 objFunc2 = @(para)costfuncWrapperPwr(subject2, para);
 [paraSub2, fval2, exitflag2, output2] = fminsearchbnd(objFunc2, paraInit, vlb, vub, opts);
