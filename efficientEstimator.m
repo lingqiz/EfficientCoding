@@ -17,7 +17,7 @@ measurement = vProb; mean = decoder(measurement);
         sampleSize = 400; 
         baseStdMsmt = baseStd / prior(msmt);        
         
-        if msmt >= 1            
+        if msmt >= 0            
             estSpaceLB = msmt - baseStdMsmt;
             stepSize = (msmt - estSpaceLB) / sampleSize;
             estSpc = estSpaceLB : stepSize : msmt;
