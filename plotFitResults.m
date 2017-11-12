@@ -25,11 +25,14 @@ prior = @(support) (1 ./ (c1 * (abs(support) .^ c0) + c2)) * nrmConst;
 figure; priorSupport = (0 : 0.01 : 15);
 plot(log(priorSupport), log(prior(priorSupport)), 'LineWidth', 2);
 title(strcat(titleText, 'Prior'));
+xlabel('log V'); ylabel('log P(V)');
 
-% Matching Speed, C = 0.075 or 0.5 & Threshold 
-plotMatchSpeed(0.075); plotMatchSpeed(0.5); 
-figure; hold on; 
-plotThreshold(0.5); plotThreshold(0.075);
+% Matching Speed
+plotMatchSpeed(0.075); plotMatchSpeed(0.5);
+
+% Threshold
+figure; hold on; grid on;
+plotThreshold(0.5); % plotThreshold(0.075);
 title(strcat(titleText, 'Relative Threshold'));
 
     function plotMatchSpeed(refCrstLevel)
@@ -37,9 +40,11 @@ title(strcat(titleText, 'Relative Threshold'));
         estVRef = @(vRef) efficientEstimator(prior, baseNoise, vRef);
         estiVRef = arrayfun(estVRef, vRef);
 
-        figure; hold on;
+        figure; hold on; grid on;
+        colors = get(gca,'colororder');
         testCrst = [0.05, 0.1, 0.2, 0.4, 0.8];
         
+        % Plot matching speed computed from Bayesian fit
         for i = 1 : length(testCrst)
 
             vTest = 0.05 : 0.005 : 20; baseNoise = noiseLevel(crstLevel == testCrst(i));
@@ -52,7 +57,7 @@ title(strcat(titleText, 'Relative Threshold'));
                 vTestMatch(j) = mean(vTest(estiVTest > targetEst - sigma & estiVTest < targetEst + sigma));
             end
             plot(log(vRef), vTestMatch ./ vRef, 'LineWidth', 2); 
-        end
+        end        
         
         % Plot matching speed computed from Weibull fit
         vRef = [0.5, 1, 2, 4, 8, 12]; 
@@ -62,34 +67,47 @@ title(strcat(titleText, 'Relative Threshold'));
                 para = weibullPara(refCrst == refCrstLevel, vProb == vRef(j), crstLevel == testCrst(i), :);
                 
                 candV = 0 : 0.01 : vRef(j) + 10;  
-                targetProb = 0.5; delta = 0.01;
+                targetProb = 0.5; delta = 0.005;
                 probCorrect = wblcdf(candV, para(1), para(2));
                 
                 vMatch(j) = mean(candV(probCorrect > targetProb - delta & probCorrect < targetProb + delta));
             end
-            plot(log(vRef), vMatch ./ vRef, '--o');
+            plot(log(vRef), vMatch ./ vRef, '--o', 'Color', colors(i, :));
         end
         
         title(strcat(titleText, 'Matching Speed'));
+        xlabel('log V'); ylabel('Matching Speed: $\frac{V_{1}}{V_{0}}$', 'Interpreter', 'latex');
+        xticks(log(vRef)); xticklabels(arrayfun(@num2str, vRef, 'UniformOutput', false));
+        
     end
 
     function plotThreshold(refCrstLevel)
-        targetDPrime = 0.95; sigma = 0.01;
-        vRef = 0.5 : 0.1 : 12; baseNoise = noiseLevel(crstLevel == refCrstLevel);
+        targetDPrime = 0.955; sigma = 0.005;
+        vRef = 0.5 : 0.2 : 12; baseNoise = noiseLevel(crstLevel == refCrstLevel);
         thresholdV = zeros(1, length(vRef));
-        
+                
         for i = 1 : length(vRef)
-            [meanRef, stdRef] = efficientEstimator(prior, baseNoise, vRef(i));                      
-            deltaV = 0 : 0.001 : 20; testV = vRef(i) + deltaV;            
-            for j = 1 : length(testV)
-                [meanTest, stdTest] = efficientEstimator(prior, baseNoise, testV(j));
-                dPrime = (meanTest - meanRef) / sqrt((stdTest ^ 2 + stdRef ^ 2) / 2);
-                if (dPrime > targetDPrime - sigma) && (dPrime < targetDPrime + sigma)
-                    thresholdV(i) = deltaV(j);
-                    break;
+            [meanRef, stdRef] = efficientEstimator(prior, baseNoise, vRef(i));
+            
+            deltaL = 0; deltaH = 20;
+            deltaEst = (deltaL + deltaH) / 2;
+            [meanTest, stdTest] = efficientEstimator(prior, baseNoise, vRef(i) + deltaEst);
+            dPrime = (meanTest - meanRef) / sqrt((stdTest ^ 2 + stdRef ^ 2) / 2);
+            
+            while(dPrime < targetDPrime - sigma || dPrime > targetDPrime + sigma)
+                if dPrime > targetDPrime
+                   deltaH = deltaEst; 
+                else
+                   deltaL = deltaEst;
                 end
-            end            
-        end        
+                
+                deltaEst = (deltaL + deltaH) / 2;
+                [meanTest, stdTest] = efficientEstimator(prior, baseNoise, vRef(i) + deltaEst);
+                dPrime = (meanTest - meanRef) / sqrt((stdTest ^ 2 + stdRef ^ 2) / 2);                        
+            end
+            thresholdV(i) = deltaEst;
+        end
+        
         plot(log(vRef), thresholdV ./ vRef, 'LineWidth', 2);
         
         thresholdV = zeros(1, length(vProb));
@@ -102,7 +120,10 @@ title(strcat(titleText, 'Relative Threshold'));
             
             thresholdV(x) = mean(deltaV(probC > targetC - sigma & probC < targetC + sigma));
         end
-        plot(log(vProb), thresholdV ./ vProb, '--o');        
+        plot(log(vProb), thresholdV ./ vProb, '--o');
+        
+        xlabel('log V'); ylabel('Relative Threshold');
+        xticks(log(vProb)); xticklabels(arrayfun(@num2str, vProb, 'UniformOutput', false));
     end
 end
 
