@@ -2,13 +2,13 @@ dataDir = './NN2006/';
 load(strcat(dataDir, 'weibullFit1.mat'));
 load(strcat(dataDir, 'weibullFit2.mat'));
 
-c0 = 0.6162; c1 = 9.7967; c2 = 0.0651;
-noiseLevel = [0.8375, 0.6613, 0.6107, 0.3948, 0.3907, 0.3278, 0.2865];
+c0 = 0.5779; c1 = 2.6546; c2 = 0.1720;
+noiseLevel = [0.9673, 0.7785, 0.7204, 0.4546, 0.4381, 0.3572, 0.3380];
 plotResults(c0, c1, c2, noiseLevel, weibullFit1, 'Subject1: ');
 
-c0 = 0.87; c1 = 1.27; c2 = 0.4187;
-noiseLevel = [1.4137; 1.0337; 0.9751; 0.6615; 0.5028; 0.3940; 0.0747];
-plotResults(c0, c1, c2, noiseLevel, weibullFit1, 'Subject2: ');
+c0 = 0.7340; c1 = 3.7791; c2 = 0.0011;
+noiseLevel = [1.9129, 1.4875, 1.2727, 0.8150, 0.5942, 0.4427, 0.2551];
+plotResults(c0, c1, c2, noiseLevel, weibullFit2, 'Subject2: ');
 
 function plotResults(c0, c1, c2, noiseLevel, weibullPara, titleText)
 
@@ -28,7 +28,8 @@ title(strcat(titleText, 'Prior'));
 
 % Matching Speed, C = 0.075 or 0.5 & Threshold 
 plotMatchSpeed(0.075); plotMatchSpeed(0.5); 
-figure; hold on; plotThreshold(0.5); % plotThreshold(0.075);
+figure; hold on; 
+plotThreshold(0.5); plotThreshold(0.075);
 title(strcat(titleText, 'Relative Threshold'));
 
     function plotMatchSpeed(refCrstLevel)
@@ -41,7 +42,7 @@ title(strcat(titleText, 'Relative Threshold'));
         
         for i = 1 : length(testCrst)
 
-            vTest = 0.05 : 0.01 : 18; baseNoise = noiseLevel(crstLevel == testCrst(i));
+            vTest = 0.05 : 0.005 : 20; baseNoise = noiseLevel(crstLevel == testCrst(i));
             estVTest = @(vTest) efficientEstimator(prior, baseNoise, vTest);
             estiVTest = arrayfun(estVTest, vTest);
 
@@ -92,11 +93,11 @@ title(strcat(titleText, 'Relative Threshold'));
         plot(log(vRef), thresholdV ./ vRef, 'LineWidth', 2);
         
         thresholdV = zeros(1, length(vProb));
-        targetC = 0.75; sigma = 0.01;
+        targetC = 0.75; sigma = 0.001;
         
         for x = 1 : length(vProb)
             para = weibullPara(refCrst == refCrstLevel, vProb == vProb(x), crstLevel == refCrstLevel, :);
-            deltaV = 0 : 0.001 : 10; testV = vProb(x) + deltaV; 
+            deltaV = 0 : 0.0001 : 10; testV = vProb(x) + deltaV; 
             probC = wblcdf(testV, para(1), para(2));
             
             thresholdV(x) = mean(deltaV(probC > targetC - sigma & probC < targetC + sigma));
