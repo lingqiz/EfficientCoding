@@ -22,12 +22,12 @@ std  = abs(decoder(vProb + probStd) - decoder(vProb - probStd)) / 2;
         baseStdMsmt = baseStd / prior(msmt);        
         
         if msmt >= 0            
-            estSpaceLB = msmt - 2 * baseStdMsmt;
+            estSpaceLB = msmt - 1 * baseStdMsmt;
             stepSize = (msmt - estSpaceLB) / sampleSize;
             estSpc = estSpaceLB : stepSize : msmt;
             
         else % msmt < 0
-            estSpaceUB = msmt + 2 * baseStdMsmt;
+            estSpaceUB = msmt + 1 * baseStdMsmt;
             stepSize = (estSpaceUB - msmt) / sampleSize;
             estSpc = msmt : stepSize : estSpaceUB;                        
         end

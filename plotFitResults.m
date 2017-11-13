@@ -32,7 +32,8 @@ plotMatchSpeed(0.075); plotMatchSpeed(0.5);
 
 % Threshold
 figure; hold on; grid on;
-plotThreshold(0.5); % plotThreshold(0.075);
+plotThreshold(0.5); 
+% plotThreshold(0.075);
 title(strcat(titleText, 'Relative Threshold'));
 
     function plotMatchSpeed(refCrstLevel)
@@ -46,12 +47,11 @@ title(strcat(titleText, 'Relative Threshold'));
         
         % Plot matching speed computed from Bayesian fit
         for i = 1 : length(testCrst)
-
-            vTest = 0.05 : 0.005 : 20; baseNoise = noiseLevel(crstLevel == testCrst(i));
+            vTest = 0.05 : 0.01 : 20; baseNoise = noiseLevel(crstLevel == testCrst(i));
             estVTest = @(vTest) efficientEstimator(prior, baseNoise, vTest);
             estiVTest = arrayfun(estVTest, vTest);
 
-            sigma = 0.01; vTestMatch = zeros(1, length(vRef));            
+            sigma = 0.1; vTestMatch = zeros(1, length(vRef));            
             for j = 1 : length(vRef)
                 targetEst = estiVRef(j);
                 vTestMatch(j) = mean(vTest(estiVTest > targetEst - sigma & estiVTest < targetEst + sigma));
@@ -67,7 +67,7 @@ title(strcat(titleText, 'Relative Threshold'));
                 para = weibullPara(refCrst == refCrstLevel, vProb == vRef(j), crstLevel == testCrst(i), :);
                 
                 candV = 0 : 0.01 : vRef(j) + 10;  
-                targetProb = 0.5; delta = 0.005;
+                targetProb = 0.5; delta = 0.1;
                 probCorrect = wblcdf(candV, para(1), para(2));
                 
                 vMatch(j) = mean(candV(probCorrect > targetProb - delta & probCorrect < targetProb + delta));

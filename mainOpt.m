@@ -12,9 +12,19 @@ crstLevel = 7;
 vlb = [c0LB c1LB c2LB ones(1, crstLevel) * noiseLB];
 vub = [c0UB c1UB c2UB ones(1, crstLevel) * noiseUB];
 
-noiseInit = 0.3 + 0.5 * rand(1, crstLevel);
+noiseInit = rand(1, crstLevel);
 paraInit = [c0Init, c1Init, c2Init, noiseInit];
 objFunc1 = @(para)costfuncWrapperPwr(subject1, para);
+
+options = optimoptions('particleswarm', 'Display', 'iter');
+[paraSub1PS, fval1PS, ~] = particleswarm(objFunc1, length(paraInit), vlb, vub, options);
+
+noiseInit = 0.5 + rand(1, crstLevel);
+paraInit = [c0Init, c1Init, c2Init, noiseInit];
+objFunc2 = @(para)costfuncWrapperPwr(subject2, para);
+
+options = optimoptions('particleswarm', 'Display', 'iter');
+[paraSub2PS, fval2PS, ~] = particleswarm(objFunc2, length(paraInit), vlb, vub, options);
 
 % Optimization 
 opts = optimset('fminsearch');
@@ -22,12 +32,12 @@ opts.Display = 'iter';
 opts.TolX = 1.e-6;
 opts.MaxFunEvals = 2000;
 
-[paraSub1, fval1, exitflag1, output1] = fminsearchbnd(objFunc1, paraInit, vlb, vub, opts);
-
-noiseInit = 1 + 0.5 * rand(1, crstLevel);
+noiseInit = rand(1, crstLevel);
 paraInit = [c0Init, c1Init, c2Init, noiseInit];
+objFunc1 = @(para)costfuncWrapperPwr(subject1, para);
+[paraSub1, fval1, ~, ~] = fminsearchbnd(objFunc1, paraInit, vlb, vub, opts);
 
+noiseInit = 0.5 + and(1, crstLevel);
+paraInit = [c0Init, c1Init, c2Init, noiseInit];
 objFunc2 = @(para)costfuncWrapperPwr(subject2, para);
-[paraSub2, fval2, exitflag2, output2] = fminsearchbnd(objFunc2, paraInit, vlb, vub, opts);
-
-save FitResults;
+[paraSub2, fval2, ~, ~] = fminsearchbnd(objFunc2, paraInit, vlb, vub, opts);
