@@ -28,7 +28,8 @@ title(strcat(titleText, 'Prior'));
 xlabel('log V'); ylabel('log P(V)');
 
 % Matching Speed
-plotMatchSpeed(0.075); plotMatchSpeed(0.5);
+plotMatchSpeed(0.075); 
+plotMatchSpeed(0.5);
 
 % Threshold
 figure; hold on; grid on;
@@ -51,7 +52,7 @@ title(strcat(titleText, 'Relative Threshold'));
             estVTest = @(vTest) efficientEstimator(prior, baseNoise, vTest);
             estiVTest = arrayfun(estVTest, vTest);
 
-            sigma = 0.1; vTestMatch = zeros(1, length(vRef));            
+            sigma = 0.01; vTestMatch = zeros(1, length(vRef));            
             for j = 1 : length(vRef)
                 targetEst = estiVRef(j);
                 vTestMatch(j) = mean(vTest(estiVTest > targetEst - sigma & estiVTest < targetEst + sigma));
