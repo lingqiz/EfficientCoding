@@ -1,7 +1,7 @@
 % Different Loss Function 
 % Reproduce Kording & Wolpert, PNAS 2004
 
-thetaLB = -10; thetaUB = 10;
+thetaLB = -10; thetaUB = 12;
 domain = thetaLB : 0.001 : thetaUB;
 
 mean = 0;
@@ -26,17 +26,17 @@ ivtGauss = @(x ,y, sigma) -exp(-(x - y).^2 / (2 * sigma^2));
 
 options = optimoptions('fmincon','Display','off');
 estl2 = fmincon(@(est) l2Loss(est, domain, prob), 0, [], [], [], [], thetaLB, thetaUB, [], options);
-sigma = 1;
-estGauss1 = fmincon(@(est) ...
+estGauss = @(sigma) fmincon(@(est) ...
     ivtGaussLoss(est, domain, prob, sigma), 0, [], [], [], [], thetaLB, thetaUB, [], options);
+
+sigma = 1;
+estGauss1 = estGauss(sigma);
 plot(domain, ivtGauss(0, domain, sigma) + 1, 'LineWidth', 2);
 sigma = 2;
-estGauss2 = fmincon(@(est) ...
-    ivtGaussLoss(est, domain, prob, sigma), 0, [], [], [], [], thetaLB, thetaUB, [], options);
+estGauss2 = estGauss(sigma);
 plot(domain, ivtGauss(0, domain, sigma) + 1, 'LineWidth', 2);
 sigma = 3;
-estGauss3 = fmincon(@(est) ...
-    ivtGaussLoss(est, domain, prob, sigma), 0, [], [], [], [], thetaLB, thetaUB, [], options);
+estGauss3 = estGauss(sigma);
 plot(domain, ivtGauss(0, domain, sigma) + 1, 'LineWidth', 2);
 
 plot([mode, mode], ylim, '--', 'LineWidth', 2); 
