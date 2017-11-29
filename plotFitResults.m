@@ -19,7 +19,7 @@ vProb      = [0.5, 1, 2, 4, 8, 12];
 domain    = -100 : 0.01 : 100; 
 priorUnm  = 1.0 ./ (c1 * (abs(domain) .^ c0) + c2);
 nrmConst  = 1.0 / (trapz(domain, priorUnm));
-prior = @(support) (1 ./ (c1 * (abs(support) .^ c0) + c2)) * nrmConst; 
+prior = @(support) (1 ./ (c1 * (abs(support) .^ c0) + c2)) * nrmConst;
 
 % Shape of Prior 
 figure; priorSupport = (0 : 0.01 : 15);

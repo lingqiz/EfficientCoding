@@ -7,9 +7,9 @@ function logll = afcCostfuncFixedRef(prior, refV, refNoise, testV, testNoise, re
 [refEstimate, refProbDnst] = mappingEstimator(prior, refNoise, refV);
 probFaster = zeros(1, length(testV));
 
-for i = 1 : length(testV)
+for i = 1 : length(testV)    
     [testEstimate, testProbDnst] = mappingEstimator(prior, testNoise(i), testV(i));
-    probFaster(i) = probFasterIntegral(refEstimate, refProbDnst, testEstimate, testProbDnst);       
+    probFaster(i) = probFasterGrid(refEstimate, refProbDnst, testEstimate, testProbDnst);       
 end
 
 % Probability of the response 
@@ -19,6 +19,7 @@ probRes = probFaster .* response + (1 - probFaster) .* (1 - response);
 % Should consider remove outliers 
 zeroThreshold = 1e-5;
 probRes(probRes == 0) = zeroThreshold;
+probRes(probRes >= 1) = 1;
 
 % Sum of the log likelihood
 logll = sum(log(probRes));

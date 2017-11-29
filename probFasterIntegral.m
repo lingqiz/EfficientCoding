@@ -1,13 +1,13 @@
 function [ pC ] = probFasterIntegral(estimateRef, probRef, estimateTest, probTest)
 %PROBFASTER Probability of test stimuli seen faster
 
-BND = 30; intLB = -BND; intUB = BND;
+intLB = 0; intUB = max(estimateRef(end), estimateTest(end));
     
 targetFunc = ...
-    @(vRef, vTest)integrand(estimateRef, probRef, estimateTest, probTest, vRef, vTest);
+    @(vTest, vRef)integrand(estimateRef, probRef, estimateTest, probTest, vTest, vRef);
 
 % Double integral for area under ROC curve
-pC = quad2d(targetFunc, intLB, intUB, @(x) intLB * ones(size(x)), @(x) x);
+pC = quad2d(targetFunc, intLB, intUB, intLB, @(x) x);
     
     function values = integrand(estimateRef, probRef, estimateTest, probTest, vTest, vRef)
         origDim = size(vRef);
