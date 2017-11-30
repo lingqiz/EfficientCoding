@@ -2,13 +2,13 @@ dataDir = './NN2006/';
 load(strcat(dataDir, 'weibullFit1.mat'));
 load(strcat(dataDir, 'weibullFit2.mat'));
 
-c0 = 0.5779; c1 = 2.6546; c2 = 0.1720;
-noiseLevel = [0.9673, 0.7785, 0.7204, 0.4546, 0.4381, 0.3572, 0.3380];
+c0 = 0.66; c1 = 3.29; c2 = 0.0048;
+noiseLevel = [0.0521, 0.0358, 0.0352, 0.0239, 0.0243, 0.0217, 0.0141];
 plotResults(c0, c1, c2, noiseLevel, weibullFit1, 'Subject1: ');
 
-c0 = 0.7340; c1 = 3.7791; c2 = 0.0011;
-noiseLevel = [1.9129, 1.4875, 1.2727, 0.8150, 0.5942, 0.4427, 0.2551];
-plotResults(c0, c1, c2, noiseLevel, weibullFit2, 'Subject2: ');
+% c0 = 0.7340; c1 = 3.7791; c2 = 0.0011;
+% noiseLevel = [1.9129, 1.4875, 1.2727, 0.8150, 0.5942, 0.4427, 0.2551];
+% plotResults(c0, c1, c2, noiseLevel, weibullFit2, 'Subject2: ');
 
 function plotResults(c0, c1, c2, noiseLevel, weibullPara, titleText)
 
@@ -49,13 +49,13 @@ title(strcat(titleText, 'Relative Threshold'));
             noiseConst = noiseLevel(crstLevel == testCrst(i));
             vMatch = zeros(1, length(vRef));
             for j = 1 : length(vRef)
-                [estiRef, probRef] = mappingEstimator(prior, noiseConst, vRef(j))
+                [estiRef, probRef] = mappingEstimator(prior, noiseConst, vRef(j));
 
-                target = 0.5; tolerance = 0.005;
-                matchL = vRef(j) * 0.2; matchH = vRef(j) * 2.5
+                target = 0.5; tolerance = 0.01;
+                matchL = 0.2; matchH = vRef(j) * 10;
                 matchEst = (matchL + matchH) / 2;
 
-                [estiEst, probEst] = mappingEstimator(prior, noiseConst, matchEst)
+                [estiEst, probEst] = mappingEstimator(prior, noiseConst, matchEst);
                 pC = probFasterGrid(estiRef, probRef, estiEst, probEst);
 
                 while((pC < target - tolerance) || (pC > target + tolerance))
@@ -66,12 +66,12 @@ title(strcat(titleText, 'Relative Threshold'));
                     end
 
                     matchEst = (matchL + matchH) / 2;
-                    estiEst, probEst] = mappingEstimator(prior, noiseConst, matchEst)
+                    [estiEst, probEst] = mappingEstimator(prior, noiseConst, matchEst);
                     pC = probFasterGrid(estiRef, probRef, estiEst, probEst);
                 end
                 vMatch(j) = matchEst;
             end
-            plot(log(vRef), vTestMatch ./ vRef, 'LineWidth', 2); 
+            plot(log(vRef), vMatch ./ vRef, 'LineWidth', 2); 
         end    
         
         % Plot matching speed computed from Weibull fit
