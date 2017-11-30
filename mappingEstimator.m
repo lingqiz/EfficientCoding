@@ -18,7 +18,7 @@ snsMeasurement = interp1(stmSpc, F, vProb);
 % P(m | theta), expressed in sensory space
 % Consider +/- 4SD range
 estLB = max(0, snsMeasurement - 4 * intNoise);
-estUB = snsMeasurement + 4 * intNoise;
+estUB = min(1, snsMeasurement + 4 * intNoise);
 sampleSize = 400; sampleStepSize  = (estUB - estLB) / sampleSize;
 estDomain = estLB : sampleStepSize : estUB;
 

@@ -18,15 +18,15 @@ opts.Display = 'iter';
 opts.TolX = 1.e-6;
 opts.MaxFunEvals = 2000;
 
-c0Init = 0.6076; c1Init = 3.038; c2Init = 0.033;
-noiseInit = [0.049, 0.0338, 0.0326, 0.0218, 0.0222, 0.0180, 0.0132];
+c0Init = 0.5779; c1Init = 2.6546; c2Init = 0.1720;
+noiseInit = [0.0509, 0.0410, 0.0379, 0.0239, 0.0231, 0.0188, 0.0178];
 paraInit = [c0Init, c1Init, c2Init, noiseInit];
 
 objFunc1 = @(para)costfuncWrapperPwr(subject1, para);
 [paraSub1, fval1, ~, ~] = fminsearchbnd(objFunc1, paraInit, vlb, vub, opts);
 
 c0Init = 0.7340; c1Init = 3.7791; c2Init = 0.0011;
-noiseInit = [0.0675, 0.0525, 0.0449, 0.0288, 0.0210, 0.0156, 0.0090];
+noiseInit = [0.0638, 0.0496, 0.0424, 0.0272, 0.0198, 0.0148, 0.0085];
 paraInit = [c0Init, c1Init, c2Init, noiseInit];
 
 objFunc2 = @(para)costfuncWrapperPwr(subject2, para);

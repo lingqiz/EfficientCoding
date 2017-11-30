@@ -7,7 +7,11 @@ function logll = afcCostfuncFixedRef(prior, refV, refNoise, testV, testNoise, re
 [refEstimate, refProbDnst] = mappingEstimator(prior, refNoise, refV);
 probFaster = zeros(1, length(testV));
 
-for i = 1 : length(testV)    
+for i = 1 : length(testV)
+    if(testV(i)) <= 0
+        probFaster(i) = 1;
+        continue;
+    end
     [testEstimate, testProbDnst] = mappingEstimator(prior, testNoise(i), testV(i));
     probFaster(i) = probFasterGrid(refEstimate, refProbDnst, testEstimate, testProbDnst);       
 end

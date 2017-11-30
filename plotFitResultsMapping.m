@@ -16,7 +16,7 @@ refCrst    = [0.075, 0.5];
 crstLevel  = [0.05, 0.075, 0.1, 0.2, 0.4, 0.5, 0.8];
 vProb      = [0.5, 1, 2, 4, 8, 12];
 
-domain    = -100 : 0.01 : 100; 
+domain    = 0 : 0.01 : 100; 
 priorUnm  = 1.0 ./ (c1 * (abs(domain) .^ c0) + c2);
 nrmConst  = 1.0 / (trapz(domain, priorUnm));
 prior = @(support) (1 ./ (c1 * (abs(support) .^ c0) + c2)) * nrmConst;
@@ -37,28 +37,42 @@ plotThreshold(0.5);
 plotThreshold(0.075);
 title(strcat(titleText, 'Relative Threshold'));
 
-    function plotMatchSpeed(refCrstLevel)
-        vRef = 0.5 : 0.1 : 12; baseNoise = noiseLevel(crstLevel == refCrstLevel);
-        estVRef = @(vRef) efficientEstimator(prior, baseNoise, vRef);
-        estiVRef = arrayfun(estVRef, vRef);
-
+    function plotMatchSpeed(refCrstLevel)        
         figure; hold on; grid on;
         colors = get(gca,'colororder');
-        testCrst = [0.05, 0.1, 0.2, 0.4, 0.8];
+        
+        testCrst = [0.05, 0.1, 0.2, 0.4, 0.8];        
         
         % Plot matching speed computed from Bayesian fit
+        vRef = 0.5 : 0.1 : 12;
         for i = 1 : length(testCrst)
-            vTest = 0.05 : 0.01 : 20; baseNoise = noiseLevel(crstLevel == testCrst(i));
-            estVTest = @(vTest) efficientEstimator(prior, baseNoise, vTest);
-            estiVTest = arrayfun(estVTest, vTest);
-
-            sigma = 0.01; vTestMatch = zeros(1, length(vRef));            
+            noiseConst = noiseLevel(crstLevel == testCrst(i));
+            vMatch = zeros(1, length(vRef));
             for j = 1 : length(vRef)
-                targetEst = estiVRef(j);
-                vTestMatch(j) = mean(vTest(estiVTest > targetEst - sigma & estiVTest < targetEst + sigma));
+                [estiRef, probRef] = mappingEstimator(prior, noiseConst, vRef(j))
+
+                target = 0.5; tolerance = 0.005;
+                matchL = vRef(j) * 0.2; matchH = vRef(j) * 2.5
+                matchEst = (matchL + matchH) / 2;
+
+                [estiEst, probEst] = mappingEstimator(prior, noiseConst, matchEst)
+                pC = probFasterGrid(estiRef, probRef, estiEst, probEst);
+
+                while((pC < target - tolerance) || (pC > target + tolerance))
+                    if pC > target
+                        matchH = matchEst;
+                    else
+                        matchL = matchEst;
+                    end
+
+                    matchEst = (matchL + matchH) / 2;
+                    estiEst, probEst] = mappingEstimator(prior, noiseConst, matchEst)
+                    pC = probFasterGrid(estiRef, probRef, estiEst, probEst);
+                end
+                vMatch(j) = matchEst;
             end
             plot(log(vRef), vTestMatch ./ vRef, 'LineWidth', 2); 
-        end        
+        end    
         
         % Plot matching speed computed from Weibull fit
         vRef = [0.5, 1, 2, 4, 8, 12]; 
@@ -83,28 +97,28 @@ title(strcat(titleText, 'Relative Threshold'));
     end
 
     function plotThreshold(refCrstLevel)
-        targetDPrime = 0.955; sigma = 0.005;
+        targetC = 0.75; tolerance = 0.005;
         vRef = 0.5 : 0.2 : 12; baseNoise = noiseLevel(crstLevel == refCrstLevel);
         thresholdV = zeros(1, length(vRef));
                 
         for i = 1 : length(vRef)
-            [meanRef, stdRef] = efficientEstimator(prior, baseNoise, vRef(i));
+            [estiRef, probRef] = mappingEstimator(prior, baseNoise, vRef(i));
             
             deltaL = 0; deltaH = 20;
             deltaEst = (deltaL + deltaH) / 2;
-            [meanTest, stdTest] = efficientEstimator(prior, baseNoise, vRef(i) + deltaEst);
-            dPrime = (meanTest - meanRef) / sqrt((stdTest ^ 2 + stdRef ^ 2) / 2);
+            [estiTest, probTest] = mappingEstimator(prior, baseNoise, vRef(i) + deltaEst);
+            pC = probFasterGrid(estiRef, probRef, estiTest, probTest);
             
-            while(dPrime < targetDPrime - sigma || dPrime > targetDPrime + sigma)
-                if dPrime > targetDPrime
+            while(pC < targetC - tolerance || pC > targetC + tolerance)
+                if pC > targetC
                    deltaH = deltaEst; 
                 else
                    deltaL = deltaEst;
                 end
                 
                 deltaEst = (deltaL + deltaH) / 2;
-                [meanTest, stdTest] = efficientEstimator(prior, baseNoise, vRef(i) + deltaEst);
-                dPrime = (meanTest - meanRef) / sqrt((stdTest ^ 2 + stdRef ^ 2) / 2);                        
+                [estiTest, probTest] = mappingEstimator(prior, baseNoise, vRef(i) + deltaEst);
+                pC = probFasterGrid(estiRef, probRef, estiTest, probTest);                       
             end
             thresholdV(i) = deltaEst;
         end
