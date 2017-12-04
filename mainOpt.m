@@ -18,8 +18,8 @@ opts.Display = 'iter';
 opts.TolX = 1.e-6;
 opts.MaxFunEvals = 2000;
 
-c0Init = 0.5779; c1Init = 2.6546; c2Init = 0.1720;
-noiseInit = [0.0509, 0.0410, 0.0379, 0.0239, 0.0231, 0.0188, 0.0178];
+c0Init = 0.6024; c1Init = 2.6546; c2Init = 0.1720;
+noiseInit = [0.0509, 0.0410, 0.0379, 0.0239, 0.0231, 0.0188, 0.0158];
 paraInit = [c0Init, c1Init, c2Init, noiseInit];
 
 objFunc1 = @(para)costfuncWrapperPwr(subject1, para);

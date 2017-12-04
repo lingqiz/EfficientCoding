@@ -6,9 +6,9 @@ c0 = 0.66; c1 = 3.29; c2 = 0.0048;
 noiseLevel = [0.0521, 0.0358, 0.0352, 0.0239, 0.0243, 0.0217, 0.0141];
 plotResults(c0, c1, c2, noiseLevel, weibullFit1, 'Subject1: ');
 
-% c0 = 0.7340; c1 = 3.7791; c2 = 0.0011;
-% noiseLevel = [1.9129, 1.4875, 1.2727, 0.8150, 0.5942, 0.4427, 0.2551];
-% plotResults(c0, c1, c2, noiseLevel, weibullFit2, 'Subject2: ');
+c0 = 0.7340; c1 = 3.7791; c2 = 0.0011;
+noiseLevel = [1.9129, 1.4875, 1.2727, 0.8150, 0.5942, 0.4427, 0.2551];
+plotResults(c0, c1, c2, noiseLevel, weibullFit2, 'Subject2: ');
 
 function plotResults(c0, c1, c2, noiseLevel, weibullPara, titleText)
 
@@ -19,6 +19,7 @@ vProb      = [0.5, 1, 2, 4, 8, 12];
 domain    = 0 : 0.01 : 100; 
 priorUnm  = 1.0 ./ (c1 * (abs(domain) .^ c0) + c2);
 nrmConst  = 1.0 / (trapz(domain, priorUnm));
+
 prior = @(support) (1 ./ (c1 * (abs(support) .^ c0) + c2)) * nrmConst;
 
 % Shape of Prior 

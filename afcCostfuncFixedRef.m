@@ -22,7 +22,7 @@ probRes = probFaster .* response + (1 - probFaster) .* (1 - response);
 % Avoid log(0) for numerical issuses
 % Should consider remove outliers 
 zeroThreshold = 1e-5;
-probRes(probRes == 0) = zeroThreshold;
+probRes(probRes <= zeroThreshold) = zeroThreshold;
 probRes(probRes >= 1) = 1;
 
 % Sum of the log likelihood
