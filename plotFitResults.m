@@ -1,14 +1,13 @@
-dataDir = './NN2006/';
-load(strcat(dataDir, 'weibullFit1.mat'));
-load(strcat(dataDir, 'weibullFit2.mat'));
+load('./AllFitRes/weibullFitAll.mat');
+load('./AllFitRes/BayesianFitAll1.mat');
 
-c0 = 0.5779; c1 = 2.6546; c2 = 0.1720;
-noiseLevel = [0.9673, 0.7785, 0.7204, 0.4546, 0.4381, 0.3572, 0.3380];
+subIdx = 1;
+allPara = [paraSub1; paraSub2; paraSub3; paraSub4; paraSub5];
+paraSub = allPara(subIdx, :);
+
+c0 = paraSub(1); c1 = paraSub(2); c2 = paraSub(3);
+noiseLevel = paraSub(4:end);
 plotResults(c0, c1, c2, noiseLevel, weibullFit1, 'Subject1: ');
-
-c0 = 0.7340; c1 = 3.7791; c2 = 0.0011;
-noiseLevel = [1.9129, 1.4875, 1.2727, 0.8150, 0.5942, 0.4427, 0.2551];
-plotResults(c0, c1, c2, noiseLevel, weibullFit2, 'Subject2: ');
 
 function plotResults(c0, c1, c2, noiseLevel, weibullPara, titleText)
 
@@ -48,7 +47,7 @@ title(strcat(titleText, 'Relative Threshold'));
         
         % Plot matching speed computed from Bayesian fit
         for i = 1 : length(testCrst)
-            vTest = 0.05 : 0.01 : 20; baseNoise = noiseLevel(crstLevel == testCrst(i));
+            vTest = 0.05 : 0.005 : 20; baseNoise = noiseLevel(crstLevel == testCrst(i));
             estVTest = @(vTest) efficientEstimator(prior, baseNoise, vTest);
             estiVTest = arrayfun(estVTest, vTest);
 

@@ -1,9 +1,15 @@
 dataDir = './NN2006/';
 load(strcat(dataDir, 'SUB1.mat'));
 load(strcat(dataDir, 'SUB2.mat'));
+load(strcat(dataDir, 'SUB3.mat'));
+load(strcat(dataDir, 'SUB4.mat'));
+load(strcat(dataDir, 'SUB5.mat'));
 
 [LL1, weibullFit1] = weibullFit(subject1);
 [LL2, weibullFit2] = weibullFit(subject2);
+[LL3, weibullFit3] = weibullFit(subject3);
+[LL4, weibullFit4] = weibullFit(subject4);
+[LL5, weibullFit5] = weibullFit(subject5);
 
 function [sumLL, fitResults] = weibullFit(subjectData)
 sumLL = 0; 
@@ -32,7 +38,6 @@ for i = 1 : length(crtRef)
             
             fitResults(i, j, k, :) = fitPara;
             sumLL = sumLL + fval; 
-
         end
     end
 end

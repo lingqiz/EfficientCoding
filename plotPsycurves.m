@@ -1,8 +1,7 @@
-load('FinalFitRes.mat');
+load('./AllFitRes/weibullFitAll.mat');
+load('./AllFitRes/BayesianFitAll1.mat');
 
-plotPsycurve(paraSub1, weibullFit1, 'Subject 1');
 plotPsycurve(paraSub2, weibullFit2, 'Subject 2');
-
 function plotPsycurve(modelPara, weibullPara, titleText)
 
 cRef  = 0.075;
@@ -41,7 +40,7 @@ for i = 1 : length(cTest)
         noise2 = noiseLevel(testCrst == crst2);
         
         rangeV = supports(refV == v1, :);
-        v2 = rangeV(1) : 0.02 : rangeV(2);
+        v2 = rangeV(1) : 0.005 : rangeV(2);
         
         para = weibullPara(refCrst == crst1, refV == v1, testCrst == crst2, :);
         pLgrWeibull = wblcdf(v2, para(1), para(2));
