@@ -45,19 +45,3 @@ noiseInit = rand(1, crstLevel);
 paraInit = [c0Init, c1Init, c2Init, noiseInit];
 objFunc5 = @(para)costfuncWrapperPwr(subject5, para);
 [paraSub5, fval5, ~, ~] = fminsearchbnd(objFunc5, paraInit, vlb, vub, opts);
-
-function randomSearch
-    noiseInit = rand(1, crstLevel);
-    paraInit = [c0Init, c1Init, c2Init, noiseInit];
-    objFunc1 = @(para)costfuncWrapperPwr(subject1, para);
-
-    options = optimoptions('particleswarm', 'Display', 'iter');
-    [paraSub1PS, fval1PS, ~] = particleswarm(objFunc1, length(paraInit), vlb, vub, options);
-
-    noiseInit = 0.5 + rand(1, crstLevel);
-    paraInit = [c0Init, c1Init, c2Init, noiseInit];
-    objFunc2 = @(para)costfuncWrapperPwr(subject2, para);
-
-    options = optimoptions('particleswarm', 'Display', 'iter');
-    [paraSub2PS, fval2PS, ~] = particleswarm(objFunc2, length(paraInit), vlb, vub, options);
-end
