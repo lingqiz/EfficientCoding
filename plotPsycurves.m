@@ -1,7 +1,7 @@
-load('FinalFitRes.mat');
+load('./AllFitRes/weibullFitAll.mat');
+load('./TmpParaSub1-2.mat');
 
 plotPsycurve(paraSub1, weibullFit1, 'Subject 1');
-plotPsycurve(paraSub2, weibullFit2, 'Subject 2');
 
 function plotPsycurve(modelPara, weibullPara, titleText)
 
@@ -26,7 +26,7 @@ supports = [0, 1; 0, 2; 0, 4; 0, 10; 0, 25; 0, 30];
 c0 = modelPara(1); c1 = modelPara(2); c2 = modelPara(3);
 noiseLevel = modelPara(4:end); 
     
-domain    = -100 : 0.01 : 100; 
+domain    = 0 : 0.01 : 100;
 priorUnm  = 1.0 ./ (c1 * (abs(domain) .^ c0) + c2);
 nrmConst  = 1.0 / (trapz(domain, priorUnm));
 prior = @(support) (1 ./ (c1 * (abs(support) .^ c0) + c2)) * nrmConst; 
@@ -41,17 +41,16 @@ for i = 1 : length(cTest)
         noise2 = noiseLevel(testCrst == crst2);
         
         rangeV = supports(refV == v1, :);
-        v2 = rangeV(1) : 0.02 : rangeV(2);
+        v2 = rangeV(1) : 0.05 : rangeV(2);
         
         para = weibullPara(refCrst == crst1, refV == v1, testCrst == crst2, :);
         pLgrWeibull = wblcdf(v2, para(1), para(2));
         pLgrBayes = zeros(1, length(v2));
         
-        [meanRef, stdRef] = efficientEstimator(prior, noise1, v1);
+        [estsRef, probRef] = mappingEstimator(prior, noise1, v1);
         for k = 1 : length(pLgrBayes)
-            [meanTest, stdTest] = efficientEstimator(prior, noise2, v2(k));
-            dPrime = (meanTest - meanRef) / sqrt((stdTest ^ 2 + stdRef ^ 2) / 2);
-            pLgrBayes(k) = 0.5 * erfc(-0.5 * dPrime);
+            [estsTest, probTest] = mappingEstimator(prior, noise2, v2(k));            
+            pLgrBayes(k) = probFasterGrid(estsRef, probRef, estsTest, probTest);
         end
         
         subplot(6, 6, index((i-1) * 6 + j));
