@@ -5,14 +5,13 @@ colors = get(gca,'colororder');
 
 nSub = 5;
 allPara = [paraSub1; paraSub2; paraSub3; paraSub4; paraSub5];
-% allPara = [paraSub1; parameters];
 
 for i = 1 : nSub
     para = allPara(i, :);
-    plotPrior(para, false, false, '-');
+    plotPrior(para, false, true, '-');
 end
 
-% plotPrior([1, 1, 0.3], false, true, '--');
+plotPrior([1, 1, 0.3], false, true, '--');
 legend('Sub1', 'Sub2', 'Sub3', 'Sub4', 'Sub5', 'Reference');
 
 nTrial = [5760, 5760, 960, 5760, 6240];
