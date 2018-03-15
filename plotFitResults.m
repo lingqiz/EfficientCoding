@@ -32,8 +32,8 @@ plotMatchSpeed(0.5);
 
 % Threshold
 figure; hold on; grid on;
-plotThreshold(0.075);
-plotThreshold(0.5);
+plotThreshold(0.075, true);
+plotThreshold(0.5, true);
 title(strcat(titleText, 'Relative Threshold'));
 
     function plotMatchSpeed(refCrstLevel)
@@ -47,7 +47,7 @@ title(strcat(titleText, 'Relative Threshold'));
         
         % Plot matching speed computed from Bayesian fit
         for i = 1 : length(testCrst)
-            vTest = 0.05 : 0.005 : 20; baseNoise = noiseLevel(crstLevel == testCrst(i));
+            vTest = 0.05 : 0.005 : 24; baseNoise = noiseLevel(crstLevel == testCrst(i));
             estVTest = @(vTest) efficientEstimator(prior, baseNoise, vTest);
             estiVTest = arrayfun(estVTest, vTest);
 
@@ -66,8 +66,8 @@ title(strcat(titleText, 'Relative Threshold'));
             for j = 1 : length(vRef)
                 para = weibullPara(refCrst == refCrstLevel, vProb == vRef(j), crstLevel == testCrst(i), :);
                 
-                candV = 0 : 0.01 : vRef(j) + 10;  
-                targetProb = 0.5; delta = 0.1;
+                candV = 0 : 0.001 : vRef(j) + 10;  
+                targetProb = 0.5; delta = 0.01;
                 probCorrect = wblcdf(candV, para(1), para(2));
                 
                 vMatch(j) = mean(candV(probCorrect > targetProb - delta & probCorrect < targetProb + delta));
@@ -81,7 +81,7 @@ title(strcat(titleText, 'Relative Threshold'));
         
     end
 
-    function plotThreshold(refCrstLevel)
+    function plotThreshold(refCrstLevel, relative)
         targetDPrime = 0.955; sigma = 0.005;
         vRef = 0.5 : 0.2 : 12; baseNoise = noiseLevel(crstLevel == refCrstLevel);
         thresholdV = zeros(1, length(vRef));
@@ -108,7 +108,11 @@ title(strcat(titleText, 'Relative Threshold'));
             thresholdV(i) = deltaEst;
         end
         
-        plot(log(vRef), log(thresholdV), 'LineWidth', 2);
+        if relative
+            plot(log(vRef), thresholdV ./ vRef, 'LineWidth', 2);
+        else
+            plot(log(vRef), log(thresholdV), 'LineWidth', 2);
+        end
         
         thresholdV = zeros(1, length(vProb));
         targetC = 0.75; sigma = 0.001;
@@ -120,10 +124,16 @@ title(strcat(titleText, 'Relative Threshold'));
             
             thresholdV(x) = mean(deltaV(probC > targetC - sigma & probC < targetC + sigma));
         end
-        plot(log(vProb), log(thresholdV), '--o');
         
-        xlabel('log V'); ylabel('Relative Threshold');
-        
+        if relative
+            plot(log(vProb), thresholdV ./ vProb, '--o');
+            ylabel('Relative Threshold');
+        else
+            plot(log(vProb), log(thresholdV), '--o');
+            ylabel('Absolute Threshold');
+        end
+                
+        xlabel('log V');         
         xticks(log(vProb)); 
         xticklabels(arrayfun(@num2str, vProb, 'UniformOutput', false));                
     end

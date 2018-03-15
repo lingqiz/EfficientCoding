@@ -8,10 +8,10 @@ allPara = [paraSub1; paraSub2; paraSub3; paraSub4; paraSub5];
 
 for i = 1 : nSub
     para = allPara(i, :);
-    plotPrior(para, false, true, '-');
+    plotPrior(para, true, false, '-');
 end
 
-plotPrior([1, 1, 0.3], false, true, '--');
+plotPrior([1, 1, 0.3], true, false, '--');
 legend('Sub1', 'Sub2', 'Sub3', 'Sub4', 'Sub5', 'Reference');
 
 nTrial = [5760, 5760, 960, 5760, 6240];
