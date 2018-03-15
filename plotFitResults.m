@@ -32,8 +32,8 @@ plotMatchSpeed(0.5);
 
 % Threshold
 figure; hold on; grid on;
-plotThreshold(0.075, true);
-plotThreshold(0.5, true);
+plotThreshold(0.075, false);
+plotThreshold(0.5, false);
 title(strcat(titleText, 'Relative Threshold'));
 
     function plotMatchSpeed(refCrstLevel)
@@ -130,10 +130,10 @@ title(strcat(titleText, 'Relative Threshold'));
             ylabel('Relative Threshold');
         else
             plot(log(vProb), log(thresholdV), '--o');
-            ylabel('Absolute Threshold');
+            ylabel('Log Absolute Threshold');
         end
                 
-        xlabel('log V');         
+        xlabel('log V');        
         xticks(log(vProb)); 
         xticklabels(arrayfun(@num2str, vProb, 'UniformOutput', false));                
     end
