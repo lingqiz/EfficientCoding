@@ -33,7 +33,7 @@ barPlot(1).FaceColor = colors(1, :);
 barPlot(2).FaceColor = colors(2, :);
 barPlot(3).FaceColor = colors(5, :);
 
-yticks(0 : 0.2 : 1); 
+yticks(0 : 0.2 : 1); grid on;
 yticklabels(arrayfun(@num2str, 0 : 0.2 : 1, 'UniformOutput', false));    
 
 title('Normalized Log Likelihood');
