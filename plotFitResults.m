@@ -23,6 +23,8 @@ prior = @(support) (1 ./ (c1 * (abs(support) .^ c0) + c2)) * nrmConst;
 % Shape of Prior 
 figure; priorSupport = (0 : 0.01 : 15);
 plot(log(priorSupport), log(prior(priorSupport)), 'LineWidth', 2);
+
+grid on;
 title(strcat(titleText, 'Prior'));
 xlabel('log V'); ylabel('log P(V)');
 
@@ -32,8 +34,10 @@ plotMatchSpeed(0.5);
 
 % Threshold
 figure; hold on; grid on;
-plotThreshold(0.075, false);
-plotThreshold(0.5, false);
+l1 = plotThreshold(0.075, false, 1);
+l2 = plotThreshold(0.5, false, 2);
+
+legend([l1, l2], {'0.075', '0.5'});
 title(strcat(titleText, 'Relative Threshold'));
 
     function plotMatchSpeed(refCrstLevel)
@@ -60,7 +64,8 @@ title(strcat(titleText, 'Relative Threshold'));
         end        
         
         % Plot matching speed computed from Weibull fit
-        vRef = [0.5, 1, 2, 4, 8, 12]; 
+        vRef = [0.5, 1, 2, 4, 8, 12];
+        weibullLine = zeros(1, length(testCrst));
         for i = 1 : length(testCrst)
             vMatch = zeros(1, length(vRef)); 
             for j = 1 : length(vRef)
@@ -72,16 +77,20 @@ title(strcat(titleText, 'Relative Threshold'));
                 
                 vMatch(j) = mean(candV(probCorrect > targetProb - delta & probCorrect < targetProb + delta));
             end
-            plot(log(vRef), vMatch ./ vRef, '--o', 'Color', colors(i, :));
+            weibullLine(i) = ...
+                plot(log(vRef), vMatch ./ vRef, '--o', 'Color', colors(i, :));
         end
         
         title(strcat(titleText, 'Matching Speed'));
         xlabel('log V'); ylabel('Matching Speed: $\frac{V_{1}}{V_{0}}$', 'Interpreter', 'latex');
         xticks(log(vRef)); xticklabels(arrayfun(@num2str, vRef, 'UniformOutput', false));
         
+        legend(weibullLine, arrayfun(@num2str, testCrst, 'UniformOutput', false));
     end
 
-    function plotThreshold(refCrstLevel, relative)
+    function dataLine = plotThreshold(refCrstLevel, relative, colorIdx)
+        colors = get(gca,'colororder');
+        
         targetDPrime = 0.955; sigma = 0.005;
         vRef = 0.5 : 0.2 : 12; baseNoise = noiseLevel(crstLevel == refCrstLevel);
         thresholdV = zeros(1, length(vRef));
@@ -109,9 +118,9 @@ title(strcat(titleText, 'Relative Threshold'));
         end
         
         if relative
-            plot(log(vRef), thresholdV ./ vRef, 'LineWidth', 2);
+            plot(log(vRef), thresholdV ./ vRef, 'LineWidth', 2, 'Color', colors(colorIdx, :));
         else
-            plot(log(vRef), log(thresholdV), 'LineWidth', 2);
+            plot(log(vRef), log(thresholdV), 'LineWidth', 2, 'Color', colors(colorIdx, :));
         end
         
         thresholdV = zeros(1, length(vProb));
@@ -126,10 +135,10 @@ title(strcat(titleText, 'Relative Threshold'));
         end
         
         if relative
-            plot(log(vProb), thresholdV ./ vProb, '--o');
+            dataLine = plot(log(vProb), thresholdV ./ vProb, '--o', 'Color', colors(colorIdx, :));
             ylabel('Relative Threshold');
         else
-            plot(log(vProb), log(thresholdV), '--o');
+            dataLine = plot(log(vProb), log(thresholdV), '--o', 'Color', colors(colorIdx, :));
             ylabel('Log Absolute Threshold');
         end
                 
