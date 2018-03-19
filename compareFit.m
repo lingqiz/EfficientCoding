@@ -42,17 +42,17 @@ xlabel('Subject'); ylabel('Normalized Log Probability');
 function plotPrior(para, logSpace, transform, style)
 c0 = para(1); c1 = para(2); c2 = para(3);
 
-domain    = -100 : 0.01 : 100; 
+domain    = -20 : 0.01 : 20; 
 priorUnm  = 1.0 ./ (c1 * (abs(domain) .^ c0) + c2);
 nrmConst  = 1.0 / (trapz(domain, priorUnm));
 prior = @(support) (1 ./ (c1 * (abs(support) .^ c0) + c2)) * nrmConst; 
 
 % Shape of Prior 
-UB = 5.1; priorSupport = (0.01 : 0.001 : UB);
+UB = 12.1; priorSupport = (0.01 : 0.001 : UB);
 if logSpace
     plot(log(priorSupport), log(prior(priorSupport)), style, 'LineWidth', 2);
     
-    labelPos = 0.1 : 1 : UB;
+    labelPos = 0.1 : 2 : UB;
     xticks(log(labelPos)); 
     xticklabels(arrayfun(@num2str, labelPos, 'UniformOutput', false));
     

@@ -34,8 +34,8 @@ plotMatchSpeed(0.5);
 
 % Threshold
 figure; hold on; grid on;
-l1 = plotThreshold(0.075, false, 1);
-l2 = plotThreshold(0.5, false, 2);
+l1 = plotThreshold(0.075, true, 1);
+l2 = plotThreshold(0.5, true, 2);
 
 legend([l1, l2], {'0.075', '0.5'});
 title(strcat(titleText, 'Relative Threshold'));
