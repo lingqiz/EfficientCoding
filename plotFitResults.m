@@ -1,13 +1,13 @@
-load('./AllFitRes/weibullFitAll.mat');
+load('./AllFitRes/weibullFit.mat');
 load('./AllFitRes/BayesianFitAll1.mat');
 
 subIdx = 1;
-allPara = [paraSub1; paraSub2; paraSub3; paraSub4; paraSub5];
+allPara    = [paraSub1; paraSub2; paraSub3; paraSub4; paraSub5];
 paraSub = allPara(subIdx, :);
 
 c0 = paraSub(1); c1 = paraSub(2); c2 = paraSub(3);
 noiseLevel = paraSub(4:end);
-plotResults(c0, c1, c2, noiseLevel, weibullFit1, 'Subject1: ');
+plotResults(c0, c1, c2, noiseLevel, reshape(weibullFit(subIdx, :), [2 6 7 2]), 'Subject1: ');
 
 function plotResults(c0, c1, c2, noiseLevel, weibullPara, titleText)
 
@@ -33,12 +33,13 @@ plotMatchSpeed(0.075);
 plotMatchSpeed(0.5);
 
 % Threshold
+% true = relative threshold 
 figure; hold on; grid on;
-l1 = plotThreshold(0.075, true, 1);
-l2 = plotThreshold(0.5, true, 2);
+l1 = plotThreshold(0.075, false, 1);
+l2 = plotThreshold(0.5, false, 2);
 
 legend([l1, l2], {'0.075', '0.5'});
-title(strcat(titleText, 'Relative Threshold'));
+title(strcat(titleText, 'Absolute Threshold'));
 
     function plotMatchSpeed(refCrstLevel)
         vRef = 0.5 : 0.1 : 12; baseNoise = noiseLevel(crstLevel == refCrstLevel);
