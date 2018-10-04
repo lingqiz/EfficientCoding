@@ -12,7 +12,7 @@ plotResults(c0, c1, c2, noiseLevel, weibullFit2, 'Subject2: ');
 
 function plotResults(c0, c1, c2, noiseLevel, weibullPara, titleText)
 
-refCrst    = [0.075, 0.5];
+refCrst    = [0.075, 0.5];v
 crstLevel  = [0.05, 0.075, 0.1, 0.2, 0.4, 0.5, 0.8];
 vProb      = [0.5, 1, 2, 4, 8, 12];
 
