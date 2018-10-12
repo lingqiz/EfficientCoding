@@ -1,10 +1,14 @@
 % Load Dataset, Initialization, Start Fitting Procedure
 dataDir = './NN2006/';
+
 load(strcat(dataDir, 'SUB1.mat'));
 load(strcat(dataDir, 'SUB2.mat'));
+load(strcat(dataDir, 'SUB3.mat'));
+load(strcat(dataDir, 'SUB4.mat'));
+load(strcat(dataDir, 'SUB5.mat'));
 
-noiseLB = 1e-4; noiseUB = 0.1;
-c0LB = 0.4;   c0UB = 1.2;  
+noiseLB = 1e-4; noiseUB = 0.3;
+c0LB = 0.4;   c0UB = 1.5;  
 c1LB = 0.01;  c1UB = 10; 
 c2LB = 0.001; c2UB = 100; 
 
@@ -18,16 +22,17 @@ opts.Display = 'iter';
 opts.TolX = 1.e-6;
 opts.MaxFunEvals = 2000;
 
-c0Init = 0.6024; c1Init = 2.6546; c2Init = 0.1720;
-noiseInit = [0.0509, 0.0410, 0.0379, 0.0239, 0.0231, 0.0188, 0.0158];
-paraInit = [c0Init, c1Init, c2Init, noiseInit];
-
 objFunc1 = @(para)costfuncWrapperPwr(subject1, para);
-[paraSub1, fval1, ~, ~] = fminsearchbnd(objFunc1, paraInit, vlb, vub, opts);
-
-c0Init = 0.7340; c1Init = 3.7791; c2Init = 0.0011;
-noiseInit = [0.0638, 0.0496, 0.0424, 0.0272, 0.0198, 0.0148, 0.0085];
-paraInit = [c0Init, c1Init, c2Init, noiseInit];
+[paraSub1, fval1, ~, ~] = fminsearchbnd(objFunc1, paraSub1, vlb, vub, opts);
 
 objFunc2 = @(para)costfuncWrapperPwr(subject2, para);
-[paraSub2, fval2, ~, ~] = fminsearchbnd(objFunc2, paraInit, vlb, vub, opts);
+[paraSub2, fval2, ~, ~] = fminsearchbnd(objFunc2, paraSub2, vlb, vub, opts);
+
+objFunc3 = @(para)costfuncWrapperPwr(subject3, para);
+[paraSub3, fval3, ~, ~] = fminsearchbnd(objFunc3, paraSub3, vlb, vub, opts);
+
+objFunc4 = @(para)costfuncWrapperPwr(subject4, para);
+[paraSub4, fval4, ~, ~] = fminsearchbnd(objFunc4, paraSub4, vlb, vub, opts);
+
+objFunc5 = @(para)costfuncWrapperPwr(subject5, para);
+[paraSub5, fval5, ~, ~] = fminsearchbnd(objFunc5, paraSub5, vlb, vub, opts);
