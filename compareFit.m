@@ -1,15 +1,15 @@
-load('./AllFitRes/BayesianFitAll3.mat');
+load('./MappingFit.mat');
 load('./AllFitRes/weibullFitAll.mat');
+
 figure; hold on; grid on;
 colors = get(gca,'colororder');
 
 nSub = 5;
 allPara = [paraSub1; paraSub2; paraSub3; paraSub4; paraSub5];
-% allPara = [paraSub1; parameters];
 
 for i = 1 : nSub
     para = allPara(i, :);
-    plotPrior(para, false, false, '-');
+    plotPrior(para, true, false, '-');
 end
 
 % plotPrior([1, 1, 0.3], false, true, '--');
@@ -34,7 +34,7 @@ barPlot(1).FaceColor = colors(1, :);
 barPlot(2).FaceColor = colors(2, :);
 barPlot(3).FaceColor = colors(5, :);
 
-yticks(0 : 0.2 : 1); 
+yticks(0 : 0.2 : 1); grid on;
 yticklabels(arrayfun(@num2str, 0 : 0.2 : 1, 'UniformOutput', false));    
 
 title('Normalized Log Likelihood');
