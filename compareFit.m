@@ -1,5 +1,6 @@
-load('./AllFitRes/BayesianFitAll3.mat');
+load('./AllFitRes/BayesianFitAll1.mat');
 load('./AllFitRes/weibullFitAll.mat');
+
 figure; hold on; grid on;
 colors = get(gca,'colororder');
 
