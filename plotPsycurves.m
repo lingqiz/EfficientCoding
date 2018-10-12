@@ -1,5 +1,5 @@
 load('./AllFitRes/weibullFitAll.mat');
-load('./TmpParaSub1-2.mat');
+load('./MappingFit.mat');
 
 plotPsycurve(paraSub1, weibullFit1, 'Subject 1');
 
