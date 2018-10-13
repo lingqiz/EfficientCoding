@@ -1,4 +1,5 @@
-load('./AllFitRes/BayesianFitAll1.mat');
+% load('./AllFitRes/BayesianFitAll1.mat');
+load('./MappingFit.mat');
 load('./AllFitRes/weibullFitAll.mat');
 
 figure; hold on; grid on;
@@ -69,6 +70,7 @@ else
     xlim([0.01, UB]);
 end
 
+ylim([-6, 1]);
 title('Prior Across All Subjects');
 xlabel('V'); ylabel('P(V)');
 end

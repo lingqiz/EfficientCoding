@@ -1,7 +1,7 @@
 load('./AllFitRes/weibullFitAll.mat');
 load('./AllFitRes/BayesianFitAll1.mat');
 
-plotPsycurve(paraSub5, weibullFit5, 'Subject 5:');
+plotPsycurve(paraSub1, weibullFit1, 'Subject 1:');
 function plotPsycurve(modelPara, weibullPara, titleText)
 
 cRef  = 0.075;
