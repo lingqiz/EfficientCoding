@@ -6,8 +6,10 @@ load(strcat(dataDir, 'SUB2.mat'));
 load(strcat(dataDir, 'SUB3.mat'));
 load(strcat(dataDir, 'SUB4.mat'));
 load(strcat(dataDir, 'SUB5.mat'));
+load('MappingFit.mat');
 
-noiseLB = 1e-4; noiseUB = 0.3;
+noiseLB = 1e-4; 
+noiseUB = 0.3;
 c0LB = 0.4;   c0UB = 1.5;  
 c1LB = 0.01;  c1UB = 10; 
 c2LB = 0.001; c2UB = 100; 
@@ -36,3 +38,5 @@ objFunc4 = @(para)costfuncWrapperPwr(subject4, para);
 
 objFunc5 = @(para)costfuncWrapperPwr(subject5, para);
 [paraSub5, fval5, ~, ~] = fminsearchbnd(objFunc5, paraSub5, vlb, vub, opts);
+
+save('fit_res.mat');
