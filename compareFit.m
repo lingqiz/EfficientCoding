@@ -1,5 +1,4 @@
-% load('./AllFitRes/BayesianFitAll1.mat');
-load('./MappingFit.mat');
+load('./AllFitRes/BayesianFitAll1.mat');
 load('./AllFitRes/weibullFitAll.mat');
 
 figure; hold on; grid on;

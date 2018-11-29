@@ -10,7 +10,7 @@ allTestMean = zeros(1, length(testV));
 allTestStd  = zeros(1, length(testV));
 
 for i = 1 : length(testV)
-    [testMean, testStd] = efficientEstimator(prior, testNoise(i), testV(i));
+    [testMean, testStd] = efficientEstimator(prior, testNoise(i), testV(i));    
     allTestMean(i) = testMean; allTestStd(i) = testStd;           
 end
 

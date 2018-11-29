@@ -11,9 +11,16 @@ vBaseNoise = 1;
 baseStd = prior(vBaseNoise) * baseNoise;
 probStd = baseStd / prior(vProb); 
 
-measurement = vProb; 
-mean = decoder(measurement);
-std  = abs(decoder(vProb + probStd) - decoder(vProb - probStd)) / 2;
+if prior(vProb) > 1e-4
+    measurement = vProb;
+    mean = decoder(measurement);
+    std  = abs(decoder(vProb + probStd) - decoder(vProb - probStd)) / 2;
+else
+    mean = vProb;
+    std  = Inf;
+end
+
+assert(length(mean) == 1 && length(std) == 1);
 
 % Special implementation for power law prior 
 % and positive reference and test speed
@@ -45,6 +52,5 @@ std  = abs(decoder(vProb + probStd) - decoder(vProb - probStd)) / 2;
         [~, maxIdx] = max(estScore);
         esti = estSpc(maxIdx);
     end
-
 end
 
