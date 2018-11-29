@@ -6,7 +6,6 @@ load(strcat(dataDir, 'SUB2.mat'));
 load(strcat(dataDir, 'SUB3.mat'));
 load(strcat(dataDir, 'SUB4.mat'));
 load(strcat(dataDir, 'SUB5.mat'));
-load('MappingFit.mat');
 
 noiseLB = 1e-4; 
 noiseUB = 0.3;

@@ -1,6 +1,4 @@
 load('./AllFitRes/weibullFitAll.mat');
-load('./MappingFit.mat');
-
 plotPsycurve(paraSub1, weibullFit1, 'Subject 1');
 
 function plotPsycurve(modelPara, weibullPara, titleText)
@@ -52,6 +50,7 @@ for i = 1 : length(cTest)
             [estsTest, probTest] = mappingEstimator(prior, noise2, v2(k));            
             pLgrBayes(k) = probFasterGrid(estsRef, probRef, estsTest, probTest);
         end
+        pLgrBayes(pLgrBayes > 1) = 1;
         
         subplot(6, 6, index((i-1) * 6 + j));
         plot(v2, pLgrWeibull, 'r', 'LineWidth', 1.5); hold on;
@@ -59,7 +58,6 @@ for i = 1 : length(cTest)
         xlim([rangeV(1) rangeV(2)]); ylim([0, 1]);
     end
 end
-
 suptitle(titleText);
 end
 
