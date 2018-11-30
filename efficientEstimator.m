@@ -20,27 +20,20 @@ else
     std  = Inf;
 end
 
-if(empty(mean) || empty(std))
+if(isempty(mean) || isempty(std))
     mean = vProb;
     std  = Inf;
 end
 
-% Special implementation for power law prior 
-% and positive reference and test speed
     function [esti] = decoder(msmt)
-        sampleSize = 1000; 
+        sampleSize = 2000; 
         baseStdMsmt = baseStd / prior(msmt);        
-        
-        if msmt >= 0            
-            estSpaceLB = msmt - 1 * baseStdMsmt;
-            stepSize = (msmt - estSpaceLB) / sampleSize;
-            estSpc = estSpaceLB : stepSize : msmt;
+                
+        estSpaceLB = msmt - 1 * baseStdMsmt;
+        estSpaceUB = msmt + 1 * baseStdMsmt;
             
-        else % msmt < 0
-            estSpaceUB = msmt + 1 * baseStdMsmt;
-            stepSize = (estSpaceUB - msmt) / sampleSize;
-            estSpc = msmt : stepSize : estSpaceUB;                        
-        end
+        stepSize = (estSpaceUB - estSpaceLB) / sampleSize;
+        estSpc = estSpaceLB : stepSize : estSpaceUB;                    
         
         estPrior = prior(estSpc);
         estStd   = baseStd ./ estPrior;
