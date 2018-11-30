@@ -20,7 +20,10 @@ else
     std  = Inf;
 end
 
-assert(length(mean) == 1 && length(std) == 1);
+if(empty(mean) || empty(std))
+    mean = vProb;
+    std  = Inf;
+end
 
 % Special implementation for power law prior 
 % and positive reference and test speed
