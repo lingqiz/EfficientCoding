@@ -1,5 +1,4 @@
 function [mean, std] = efficientEstimator(prior, baseNoise, vProb)
-
 % EFFICIENTESTIMATOR Compute p(v'|v) with efficient 
 %            coding constrain and Gaussian likelihood
 %            function baseline noise defined at v = 1
