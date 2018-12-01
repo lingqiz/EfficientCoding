@@ -1,4 +1,4 @@
-load('GammaPrior/gammaFit2.mat');
+load('GammaPrior/gammaFitbest.mat');
 nSub = 5;
 allPara = [paraSub1; paraSub2; paraSub3; paraSub4; paraSub5];
 
@@ -7,6 +7,8 @@ for idx = 1:nSub
     para = allPara(idx, :);
     plotPrior(para, true, false, '-');
 end
+
+legend('Sub1', 'Sub2', 'Sub3', 'Sub4', 'Sub5');
 
 function plotPrior(para, logSpace, transform, style)
 
@@ -39,7 +41,7 @@ else
     xlim([0.01, UB]);
 end
 
-ylim([-5.5, -1]);
+ylim([-7, -1]);
 title('Prior Across All Subjects');
 xlabel('V'); ylabel('P(V)');
 end

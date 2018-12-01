@@ -69,7 +69,7 @@ else
     xlim([0.01, UB]);
 end
 
-ylim([-5.5, -1]);
+ylim([-7, -1]);
 title('Prior Across All Subjects');
 xlabel('V'); ylabel('P(V)');
 
