@@ -8,7 +8,7 @@ function [estimates, probDnst] = mappingEstimator(priorProb, intNoise, vProb)
 % Extended sensory space
 
 stepSize = 1e-2;
-stmSpc = 0 : stepSize : 100;
+stmSpc = -100 : stepSize : 100;
 prior  = priorProb(stmSpc);
 
 % Mapping from measurement to (homogeneous) sensory space

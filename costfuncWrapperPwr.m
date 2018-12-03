@@ -4,7 +4,7 @@ function [ negLikelihood ] = costfuncWrapperPwr(subjectData, parameters)
 c0 = parameters(1); c1 = parameters(2); c2 = parameters(3);
 
 % Computing Prior Probability
-domain    = 0 : 0.01 : 100;
+domain    = -100 : 0.01 : 100; 
 priorUnm  = 1.0 ./ (c1 * (abs(domain) .^ c0) + c2);
 nrmConst  = 1.0 / (trapz(domain, priorUnm));
 
