@@ -18,7 +18,7 @@ for i = 1 : length(refCsts)
     refCorst = refCsts(i);
     refNoise = noiseLevel(cstLevel == refCorst);
     llhds = zeros(1, length(refSpeed));
-    parfor j = 1 : length(refSpeed)        
+    for j = 1 : length(refSpeed)        
         refV  = refSpeed(j);        
         % Test stimulus for one reference stimulus
         testData = subjectData([3, 4, 9], subjectData(1, :) == refV ...

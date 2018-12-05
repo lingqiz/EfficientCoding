@@ -13,7 +13,7 @@ prior  = priorProb(stmSpc);
 
 % Mapping from measurement to (homogeneous) sensory space
 F = cumtrapz(stmSpc, prior);
-snsMeasurement = interp1(stmSpc, F, vProb);
+snsMeasurement = interp1(stmSpc, F, vProb, 'linear','extrap');
 
 % P(m | theta), expressed in sensory space
 estLB = max(0, snsMeasurement - 4 * intNoise);
@@ -26,8 +26,8 @@ estDomainInt = estLB : sampleStepSize : estUB;
 measurementDist = normpdf(estDomainInt, snsMeasurement, intNoise);
 
 % even grid in external space
-estLBext = interp1(F, stmSpc, estLB);
-estUBext = interp1(F, stmSpc, estUB);
+estLBext = interp1(F, stmSpc, estLB, 'linear','extrap');
+estUBext = interp1(F, stmSpc, estUB, 'linear','extrap');
 sampleStepSize  = (estUBext - estLBext) / sampleSize;
 
 % corresponding points in internal space
