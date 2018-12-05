@@ -19,39 +19,47 @@ snsMeasurement = interp1(stmSpc, F, vProb);
 estLB = max(0, snsMeasurement - 4 * intNoise);
 estUB = min(1, snsMeasurement + 4 * intNoise);
 
-sampleSize = 800; sampleStepSize  = (estUB - estLB) / sampleSize;
-estDomain = estLB : sampleStepSize : estUB;
+% even grid in internal space 
+% measurement distribution in internal space
+sampleSize = 500; sampleStepSize  = (estUB - estLB) / sampleSize;
+estDomainInt = estLB : sampleStepSize : estUB;
+measurementDist = normpdf(estDomainInt, snsMeasurement, intNoise);
 
-measurementDist = normpdf(estDomain, snsMeasurement, intNoise);
+% even grid in external space
+estLBext = interp1(F, stmSpc, estLB);
+estUBext = interp1(F, stmSpc, estUB);
+sampleStepSize  = (estUBext - estLBext) / sampleSize;
 
-% Inverse prior
-ivsStmSpc = interp1(F, stmSpc, estDomain);
-ivsPrior  = interp1(stmSpc, prior, ivsStmSpc);
+% corresponding points in internal space
+estDomainExt = estLBext : sampleStepSize : estUBext;
+invExtDomain = interp1(stmSpc, F, estDomainExt, 'linear','extrap');
+
+% prior for estimation
+extPrior = priorProb(estDomainExt);
 
 % Compute an estimate for each measurement
 likelihoodDist = ... 
-    exp(-0.5 * ((estDomain - estDomain')./ intNoise).^2) ./ (sqrt(2*pi) .* intNoise);
-score = likelihoodDist .* ivsPrior;
+    exp(-0.5 * ((invExtDomain - invExtDomain')./ intNoise).^2) ./ (sqrt(2*pi) .* intNoise);
+score = likelihoodDist .* extPrior;
 
 % L0 loss, posterior Mode
+% estDomainExt -> estimate & invExtDomain -> estimate
 [~, idx]  = max(score, [], 2); 
-estimates = ivsStmSpc(idx);
+estimates = estDomainExt(idx);
 
-[estimates, idx] = uniquetol(estimates, 1e-4, 'OutputAllIndices', true);
-
-idx = cellfun(@(x) x(end), idx);
-estDomain = estDomain(idx);
+% estDomainInt -> estimate
+estimatesInt = interp1(invExtDomain, estimates, estDomainInt, 'linear','extrap');
 
 % Smooth with polynomial 
-nOrder   = 4;
-plnm     = polyfit(estDomain, estimates, nOrder);
+nOrder   = 5;
+plnm     = polyfit(estDomainInt, estimatesInt, nOrder);
 
 % Change of Variable
-probDnst = abs(gradient(estDomain, polyval(plnm, estDomain))) .* measurementDist(idx);
+estimatesInt = polyval(plnm, estDomainInt);
+probDnst = abs(gradient(estDomainInt, estimatesInt)) .* measurementDist;
 
-% Git rid of NaNs & Infs
-estimates = estimates(~isnan(probDnst) & ~isinf(probDnst)); 
-probDnst  = probDnst(~isnan(probDnst)  & ~isinf(probDnst));
+estimates = estimatesInt;
+assert(sum(isnan(probDnst)) == 0);
 
 end
 
