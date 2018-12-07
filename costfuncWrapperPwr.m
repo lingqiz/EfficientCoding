@@ -1,6 +1,6 @@
 function [ negLikelihood ] = costfuncWrapperPwr(subjectData, parameters)
 %COSTFUNCWRAPPERPWR Interface function for running the optimization
-parameters
+
 c0 = parameters(1); c1 = parameters(2); c2 = parameters(3);
 
 % Computing Prior Probability

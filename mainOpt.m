@@ -23,24 +23,24 @@ opts.Display = 'iter';
 opts.TolX = 1e-3;
 opts.MaxFunEvals = 2000;
 
-objFunc1 = @(para)costfuncWrapperPwr(subject1, para);
-paraInit = [ones(1, 3), rand(1, 7) * 0.1];
-[paraSub1, fval1, ~, ~] = fminsearchbnd(objFunc1, paraInit, vlb, vub, opts);
+% objFunc1 = @(para)costfuncWrapperPwr(subject1, para);
+% paraInit = [ones(1, 3), rand(1, 7) * 0.1];
+% [paraSub1, fval1, ~, ~] = fminsearchbnd(objFunc1, paraInit, vlb, vub, opts);
 
-objFunc2 = @(para)costfuncWrapperPwr(subject2, para);
-paraInit = [ones(1, 3), rand(1, 7) * 0.1];
-[paraSub2, fval2, ~, ~] = fminsearchbnd(objFunc2, paraInit, vlb, vub, opts);
+% objFunc2 = @(para)costfuncWrapperPwr(subject2, para);
+% paraInit = [ones(1, 3), rand(1, 7) * 0.1];
+% [paraSub2, fval2, ~, ~] = fminsearchbnd(objFunc2, paraInit, vlb, vub, opts);
 
-objFunc3 = @(para)costfuncWrapperPwr(subject3, para);
-paraInit = [ones(1, 3), rand(1, 7) * 0.1];
-[paraSub3, fval3, ~, ~] = fminsearchbnd(objFunc3, paraInit, vlb, vub, opts);
+% objFunc3 = @(para)costfuncWrapperPwr(subject3, para);
+% paraInit = [ones(1, 3), rand(1, 7) * 0.1];
+% [paraSub3, fval3, ~, ~] = fminsearchbnd(objFunc3, paraInit, vlb, vub, opts);
 
 objFunc4 = @(para)costfuncWrapperPwr(subject4, para);
-paraInit = [ones(1, 3), rand(1, 7) * 0.1];
+paraInit = [paraSub4(1:3), paraSub4(4:end)*0.5 + rand(1, 7)*0.025];
 [paraSub4, fval4, ~, ~] = fminsearchbnd(objFunc4, paraInit, vlb, vub, opts);
 
 objFunc5 = @(para)costfuncWrapperPwr(subject5, para);
-paraInit = [ones(1, 3), rand(1, 7) * 0.1];
+paraInit = [paraSub5(1:3), paraSub5(4:end)*0.5 + rand(1, 7)*0.025];
 [paraSub5, fval5, ~, ~] = fminsearchbnd(objFunc5, paraInit, vlb, vub, opts);
 
 save('fit_res.mat');
