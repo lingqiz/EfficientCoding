@@ -6,10 +6,10 @@ load(strcat(dataDir, 'SUB3.mat'));
 load(strcat(dataDir, 'SUB4.mat'));
 load(strcat(dataDir, 'SUB5.mat'));
 
-noiseLB = 1e-4; noiseUB = 3;
-c0LB = 0.1;   c0UB = 2; c0Init = 1;
-c1LB = 0.01;  c1UB = 10;  c1Init = 1;
-c2LB = 0.001; c2UB = 100; c2Init = 0.3;
+noiseLB = 1e-8; noiseUB = 10;
+c0LB = 0.1;   c0UB = 10;  c0Init = 1;
+c1LB = 1e-8;  c1UB = 100; c1Init = 1;
+c2LB = 1e-8;  c2UB = 0.01; c2Init = 1e-8;
 
 crstLevel = 7;
 vlb = [c0LB c1LB c2LB ones(1, crstLevel) * noiseLB];

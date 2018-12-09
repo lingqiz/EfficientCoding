@@ -1,5 +1,4 @@
-% load('./AllFitRes/BayesianFitAll1.mat');
-load('./MappingFit.mat');
+load('./GaussFitFinal/gauss_final.mat');
 load('./AllFitRes/weibullFitAll.mat');
 
 figure; hold on; grid on;
@@ -13,7 +12,7 @@ for i = 1 : nSub
     plotPrior(para, true, false, '-');
 end
 
-plotPrior([1, 1, 0.3], true, false, '--');
+plotPrior([1, 0.3, 0], true, false, '--');
 legend('Sub1', 'Sub2', 'Sub3', 'Sub4', 'Sub5', 'Reference');
 
 nTrial = [5760, 5760, 960, 5760, 6240];
@@ -44,21 +43,21 @@ xlabel('Subject'); ylabel('Normalized Log Probability');
 function plotPrior(para, logSpace, transform, style)
 c0 = para(1); c1 = para(2); c2 = para(3);
 
-domain    = -20 : 0.01 : 20; 
-priorUnm  = 1.0 ./ (c1 * (abs(domain) .^ c0) + c2);
-nrmConst  = 1.0 / (trapz(domain, priorUnm));
-prior = @(support) (1 ./ (c1 * (abs(support) .^ c0) + c2)) * nrmConst; 
+domain    = -20 : 0.01 : 20;
 
-% Shape of Prior 
-UB = 12.1; priorSupport = (0.01 : 0.001 : UB);
+priorUnm  = 1.0 ./ ((abs(domain) .^ c0) + c1) + c2;
+nrmConst  = 1.0 / (trapz(domain, priorUnm));
+prior = @(support) (1.0 ./ ((abs(support) .^ c0) + c1) + c2) * nrmConst;
+
+UB = 20; priorSupport = (0.25 : 0.001 : UB);
 if logSpace
     plot(log(priorSupport), log(prior(priorSupport)), style, 'LineWidth', 2);
     
-    labelPos = 0.1 : 2 : UB;
+    labelPos = [0.25, 0.5, 1, 2.1 : 2 : 12.1, 20];
     xticks(log(labelPos)); 
     xticklabels(arrayfun(@num2str, labelPos, 'UniformOutput', false));
     
-    probPos = 0.05 : 0.1 : 0.55;
+    probPos = 0.01 : 0.05 : 0.3;
     yticks(log(probPos)); 
     yticklabels(arrayfun(@num2str, probPos, 'UniformOutput', false));
 else
@@ -70,7 +69,7 @@ else
     xlim([0.01, UB]);
 end
 
-ylim([-6, 1]);
+ylim([-7, -1]);
 title('Prior Across All Subjects');
 xlabel('V'); ylabel('P(V)');
 end
