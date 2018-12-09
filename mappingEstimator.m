@@ -50,7 +50,8 @@ estimates = estDomainExt(idx);
 % estDomainInt -> estimate
 estimatesInt = interp1(invExtDomain, estimates, estDomainInt, 'linear','extrap');
 
-% Smooth with polynomial 
+% Smooth with polynomial
+warning('off','all');
 nOrder   = 5;
 plnm     = polyfit(estDomainInt, estimatesInt, nOrder);
 
