@@ -43,7 +43,7 @@ xlabel('Subject'); ylabel('Normalized Log Probability');
 function plotPrior(para, logSpace, transform, style)
 c0 = para(1); c1 = para(2); c2 = para(3);
 
-domain    = -100 : 0.01 : 100; 
+domain    = -100 : 0.01 : 100;
 priorUnm  = 1.0 ./ (c1 * (abs(domain) .^ c0) + c2);
 nrmConst  = 1.0 / (trapz(domain, priorUnm));
 prior = @(support) (1 ./ (c1 * (abs(support) .^ c0) + c2)) * nrmConst; 
