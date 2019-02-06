@@ -10,7 +10,7 @@ load(strcat(dataDir, 'SUB5.mat'));
 noiseLB = 1e-8; 
 noiseUB = 0.4;
 c0LB = 0.1;   c0UB = 1.6;  c0Init = 1;
-c1LB = 1e-8;  c1UB = 100;  c1Init = 1;
+c1LB = 1e-8;  c1UB = 100;  c1Init = 1;      % TODO: Start with a small parameter
 c2LB = 0;     c2UB = 0.01; c2Init = 1e-8;
 priorInit = [c0Init, c1Init, c2Init];
 

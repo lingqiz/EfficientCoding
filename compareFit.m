@@ -1,4 +1,4 @@
-load('./MappingFit.mat');
+load('./MappingFit/map_fit_Dec8.mat');
 load('./AllFitRes/weibullFitAll.mat');
 
 figure; hold on; grid on;
@@ -12,7 +12,7 @@ for i = 1 : nSub
     plotPrior(para, true, false, '-');
 end
 
-% plotPrior([1, 1, 0.3], false, true, '--');
+plotPrior([1, 1, 0.3], true, false, '--');
 legend('Sub1', 'Sub2', 'Sub3', 'Sub4', 'Sub5', 'Reference');
 
 nTrial = [5760, 5760, 960, 5760, 6240];
