@@ -48,12 +48,11 @@ priorUnm  = 1.0 ./ (c1 * (abs(domain) .^ c0) + c2);
 nrmConst  = 1.0 / (trapz(domain, priorUnm));
 prior = @(support) (1 ./ (c1 * (abs(support) .^ c0) + c2)) * nrmConst; 
 
-% Shape of Prior 
-UB = 20; priorSupport = (0.25 : 0.001 : UB);
+UB = 20; priorSupport = (0.1 : 0.001 : UB);
 if logSpace
     plot(log(priorSupport), log(prior(priorSupport)), style, 'LineWidth', 2);
     
-    labelPos = [0.25, 0.5, 1, 2.1 : 2 : 12.1, 20];
+    labelPos = [0.1, 0.25, 0.5, 1, 2.1 : 2 : 12.1, 20];
     xticks(log(labelPos)); 
     xticklabels(arrayfun(@num2str, labelPos, 'UniformOutput', false));
     
@@ -69,7 +68,7 @@ else
     xlim([0.01, UB]);
 end
 
-ylim([-7, -1]);
+ylim([-7, -0.5]);
 title('Prior Across All Subjects');
 xlabel('V'); ylabel('P(V)');
 end
