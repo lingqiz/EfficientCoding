@@ -2,6 +2,7 @@ load('./MappingFit/map_fit_Dec8.mat');
 load('./AllFitRes/weibullFitAll.mat');
 
 figure; hold on; grid on;
+set(gca, 'FontSize', 14)
 colors = get(gca,'colororder');
 
 nSub = 5;
@@ -52,7 +53,7 @@ UB = 20; priorSupport = (0.1 : 0.001 : UB);
 if logSpace
     plot(log(priorSupport), log(prior(priorSupport)), style, 'LineWidth', 2);
     
-    labelPos = [0.1, 0.25, 0.5, 1, 2.1 : 2 : 12.1, 20];
+    labelPos = [0.1, 0.25, 0.5, 1, 2.0 : 2 : 12.0, 20];
     xticks(log(labelPos)); 
     xticklabels(arrayfun(@num2str, labelPos, 'UniformOutput', false));
     
