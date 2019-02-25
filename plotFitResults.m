@@ -1,5 +1,5 @@
 load('./AllFitRes/weibullFit.mat');
-load('./AllFitRes/BayesianFitAll1.mat');
+load('./GaussFitFinal/gauss_final.mat');
 
 subIdx = 1;
 allPara    = [paraSub1; paraSub2; paraSub3; paraSub4; paraSub5];
@@ -15,10 +15,11 @@ refCrst    = [0.075, 0.5];
 crstLevel  = [0.05, 0.075, 0.1, 0.2, 0.4, 0.5, 0.8];
 vProb      = [0.5, 1, 2, 4, 8, 12];
 
+% Computing Prior Probability
 domain    = -100 : 0.01 : 100; 
-priorUnm  = 1.0 ./ (c1 * (abs(domain) .^ c0) + c2);
+priorUnm  = 1.0 ./ ((abs(domain) .^ c0) + c1) + c2;
 nrmConst  = 1.0 / (trapz(domain, priorUnm));
-prior = @(support) (1 ./ (c1 * (abs(support) .^ c0) + c2)) * nrmConst; 
+prior = @(support) (1.0 ./ ((abs(support) .^ c0) + c1) + c2) * nrmConst;
 
 % Shape of Prior 
 figure; priorSupport = (0 : 0.01 : 15);
