@@ -20,7 +20,7 @@ refCrst    = [0.075, 0.5];
 testCrst   = [0.05, 0.075, 0.1, 0.2, 0.4, 0.5, 0.8];
 refV       = [0.5, 1, 2, 4, 8, 12];
 
-supports = [0.1, 1; 0.1, 2; 0.1, 4; 0.1, 10; 0.1, 25; 0.1, 30];
+supports = [0.25, 1; 0.25, 2; 0.25, 4; 0.25, 10; 0.25, 25; 0.25, 30];
 
 c0 = modelPara(1); c1 = modelPara(2); c2 = modelPara(3);
 noiseLevel = modelPara(4:end); 
