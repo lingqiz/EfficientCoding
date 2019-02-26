@@ -1,20 +1,28 @@
+% Load Dataset, Initialization, Start Fitting Procedure
+dataDir = './NN2006/';
+load(strcat(dataDir, 'SUB1.mat'));
+load(strcat(dataDir, 'SUB2.mat'));
+load(strcat(dataDir, 'SUB3.mat'));
+load(strcat(dataDir, 'SUB4.mat'));
+load(strcat(dataDir, 'SUB5.mat'));
+
 load('./AllFitRes/weibullFitAll.mat');
 load('./GaussFitFinal/gauss_final.mat');
 
-plotPsycurve(paraSub1, weibullFit1, 'Subject 1:');
-function plotPsycurve(modelPara, weibullPara, titleText)
+plotPsycurve(subject1, paraSub1, weibullFit1, 'Subject 1:');
+function plotPsycurve(subData, modelPara, weibullPara, titleText)
 
 cRef  = 0.075;
 cTest = [0.05, 0.075, 0.1, 0.2, 0.4, 0.8];
-plotPsycurveCrst(modelPara, weibullPara, cRef, cTest, strcat(titleText, 'Crst = 0.075'))
+plotPsycurveCrst(subData, modelPara, weibullPara, cRef, cTest, strcat(titleText, 'Ref Crst = 0.075'))
 
 cRef = 0.5;
 cTest = [0.05, 0.1, 0.2, 0.4, 0.5, 0.8];
-plotPsycurveCrst(modelPara, weibullPara, cRef, cTest, strcat(titleText, 'Crst = 0.5'))
+plotPsycurveCrst(subData, modelPara, weibullPara, cRef, cTest, strcat(titleText, 'Ref Crst = 0.5'))
 
 end
 
-function plotPsycurveCrst(modelPara, weibullPara, cRef, cTest, titleText)
+function plotPsycurveCrst(subData, modelPara, weibullPara, cRef, cTest, titleText)
 
 refCrst    = [0.075, 0.5];
 testCrst   = [0.05, 0.075, 0.1, 0.2, 0.4, 0.5, 0.8];
@@ -57,10 +65,22 @@ for i = 1 : length(cTest)
         subplot(6, 6, index((i-1) * 6 + j));
         plot(v2, pLgrWeibull, 'r', 'LineWidth', 1.5); hold on;
         plot(v2, pLgrBayes,   'b', 'LineWidth', 1.5);
-        xlim([rangeV(1) rangeV(2)]); ylim([0, 1]);
+        xlim([rangeV(1) rangeV(2)]); ylim([0, 1]);        
+        title(sprintf('Ref Speed: %.2f \n Test Crst: %.2f', v1, crst2));
+        
+        testData = subData([3, 9], ...
+            subData(2, :) == crst1 & subData(1, :) == v1 & subData(4, :) == crst2);
+        [testSpeed, ~, idxC] = uniquetol(testData(1, :), 1e-4);
+        resProb = zeros(1, length(testSpeed));
+        dataCount = zeros(1, length(testSpeed));
+        scale = 5;
+        for idx = 1:length(testSpeed)
+            resProb(idx) = mean(testData(2, idxC' == idx));
+            dataCount(idx) = sum(idxC' == idx);
+        end
+        scatter(testSpeed, resProb, dataCount * scale, 'k');
     end
 end
-
 suptitle(titleText);
 end
 
