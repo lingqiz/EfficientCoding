@@ -1,13 +1,13 @@
 %% Bootstrap
-subject = subject2;
-paraSub = paraSub2;
-subjectIdx = 2;
+subject = subject1;
+paraSub = paraSub1;
+subjectIdx = 1;
 
 resampleData = resample(subject);
 [sumLL, fitResults] = weibullFit(resampleData);
 [biasLC, biasHC, thLC, thHC] = extractPsychcurve(fitResults, false);
 
-nBootstrap = 500;
+nBootstrap = 200;
 
 allBiasLC = zeros([nBootstrap, size(biasLC)]);
 allBiasHC = zeros([nBootstrap, size(biasHC)]);

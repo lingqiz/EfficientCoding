@@ -1,5 +1,5 @@
-load('./GaussFitFinal/gauss_final.mat');
-load('./AllFitRes/weibullFitAll.mat');
+load('./GaussFit/gauss_final.mat');
+load('./weibullFitAll.mat');
 
 figure; hold on; grid on;
 set(gca, 'FontSize', 14)

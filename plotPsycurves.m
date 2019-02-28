@@ -6,8 +6,8 @@ load(strcat(dataDir, 'SUB3.mat'));
 load(strcat(dataDir, 'SUB4.mat'));
 load(strcat(dataDir, 'SUB5.mat'));
 
-load('./AllFitRes/weibullFitAll.mat');
-load('./GaussFitFinal/gauss_final.mat');
+load('./weibullFitAll.mat');
+load('./GaussFit/gauss_final.mat');
 
 plotPsycurve(subject1, paraSub1, weibullFit1, 'Subject 1:');
 function plotPsycurve(subData, modelPara, weibullPara, titleText)
