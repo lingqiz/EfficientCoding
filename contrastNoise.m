@@ -1,6 +1,6 @@
 %% Mapping fit
 load('MappingFit/new_para_Feb9.mat');
-load('./noise_fit.mat');
+load('./noiseFit.mat');
 
 crst = [0.05, 0.075, 0.1, 0.2, 0.4, 0.5, 0.8];
 sub3Idx = [2, 6, 7];
@@ -46,25 +46,8 @@ subplot(3, 2, [5, 6]);
 l5 = plot(log(crst), paraSub5(4:end), '--o', 'LineWidth', 1.2, 'Color', colors(5, :));
 hold on; grid on;
 noise_sub5 = plot_fit(crst, paraSub5, colors(5, :), noise_sub5);
-pbaspect([1.5 1 1])
+pbaspect([2 1 1])
 title('Subject 5');
-
-%legend([l1, l2, l3, l4, l5], {'Sub1', 'Sub2', 'Sub3','Sub4', 'Sub5'});
-
-% %% combined
-% combined_data = [paraSub1(4:end); paraSub2(4:end); paraSub4(4:end); paraSub5(4:end)];
-% 
-% options = optimoptions('fmincon','Display','iter', ...
-%         'OptimalityTolerance', 1e-10, 'StepTolerance', 1e-10, 'MaxFunctionEvaluations', 1e5);
-%     
-% problem.options = options;
-% problem.solver = 'fmincon';
-% problem.objective = @(para) combined_loss(combined_data, para);
-% problem.x0 = [1e02, 200, 1, 0.5, 1, 0.5, 1, 0.5, 1, 0.5];
-% problem.lb = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-% problem.ub = [1e6, 1e6, 10, 1e4, 10, 1e4, 10, 1e4, 10, 1e4];
-% 
-% combined_fit = fmincon(problem);
 
 %% Gaussian fit
 % load('GaussFitFinal/gauss_final.mat');
