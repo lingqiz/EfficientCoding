@@ -1,5 +1,5 @@
 load('./MappingFit/map_fit_Dec8.mat');
-load('./AllFitRes/weibullFitAll.mat');
+load('./weibullFitAll.mat');
 
 figure; hold on; grid on;
 set(gca, 'FontSize', 14)
@@ -21,15 +21,17 @@ llLB = -log(0.5) * nTrial;
 
 BayesianLL = [fval1, fval2, fval3, fval4, fval5];
 WeibullLL  = [LL1, LL2, LL3, LL4, LL5];
+original   = [0.9, 0.85, 0.92, 0.82, 0.9];
 
 figure; grid on;
 normalizedLL = (llLB - BayesianLL) ./ (llLB - WeibullLL);
 
-original  = [0.85, 0.82, 0.92, 0.82, 0.9];
-competing = [0.55, 0.5, 0.65, 0.4, 0.6];
+load('./FixedPrior/fixed_prior_01.mat');
+fixedPriorLL = [fval1, fval2, fval3, fval4, fval5];
+nrmFixedPriorLL = (llLB - fixedPriorLL) ./ (llLB - WeibullLL);
 
-barPlot = bar([competing; normalizedLL; original]');
-legend('Hurliman et al.', 'Efficient Coding', 'NN2006');
+barPlot = bar([nrmFixedPriorLL; normalizedLL; original]');
+legend('Efficient Coding - Neural Prior', 'Efficient Coding - Full', 'NN 2006');
 
 barPlot(1).FaceColor = colors(1, :);
 barPlot(2).FaceColor = colors(2, :);
