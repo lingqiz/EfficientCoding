@@ -1,4 +1,4 @@
-load('./GaussFit/gauss_final.mat');
+load('./GaussFit/gauss_final_0.mat');
 load('./weibullFitAll.mat');
 
 figure; hold on; grid on;
@@ -21,13 +21,16 @@ llLB = -log(0.5) * nTrial;
 
 BayesianLL = [fval1, fval2, fval3, fval4, fval5];
 WeibullLL  = [LL1, LL2, LL3, LL4, LL5];
+original  = [0.9, 0.85, 0.92, 0.82, 0.9];
 
 figure; grid on;
 normalizedLL = (llLB - BayesianLL) ./ (llLB - WeibullLL);
 
-original  = [0.9, 0.85, 0.92, 0.82, 0.9];
+load('./GaussFit/fixed_prior_fit_01.mat');
+fixedPriorLL = [fval1, fval2, fval3, fval4, fval5];
+nrmFixedPriorLL = (llLB - fixedPriorLL) ./ (llLB - WeibullLL);
 
-barPlot = bar([competing; normalizedLL; original]');
+barPlot = bar([nrmFixedPriorLL; normalizedLL; original]');
 legend('Hurliman et al.', 'Efficient Coding', 'NN2006');
 
 barPlot(1).FaceColor = colors(1, :);
