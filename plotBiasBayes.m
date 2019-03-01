@@ -4,9 +4,9 @@ function plotBiasBayes(prior, noiseLevel, refCrstLevel)
     vRef = 0.5 : 0.1 : 12; baseNoise = noiseLevel(crstLevel == refCrstLevel);
     estVRef = @(vRef) efficientEstimator(prior, baseNoise, vRef);
     estiVRef = arrayfun(estVRef, vRef);
-
     
     testCrst = [0.05, 0.1, 0.2, 0.4, 0.8];
+    shiftOffset = -0.025:0.0125:0.025;
 
     for i = 1 : length(testCrst)
         vTest = 0.05 : 0.005 : 24; baseNoise = noiseLevel(crstLevel == testCrst(i));
@@ -18,6 +18,6 @@ function plotBiasBayes(prior, noiseLevel, refCrstLevel)
             targetEst = estiVRef(j);
             vTestMatch(j) = mean(vTest(estiVTest > targetEst - sigma & estiVTest < targetEst + sigma));
         end
-        plot(log(vRef), vTestMatch ./ vRef, 'LineWidth', 2); 
+        plot(log(vRef)+shiftOffset(i), vTestMatch ./ vRef, 'LineWidth', 1.5); 
     end        
 end

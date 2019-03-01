@@ -7,7 +7,7 @@ resampleData = resample(subject);
 [sumLL, fitResults] = weibullFit(resampleData);
 [biasLC, biasHC, thLC, thHC] = extractPsychcurve(fitResults, false);
 
-nBootstrap = 100;
+nBootstrap = 1000;
 
 allBiasLC = zeros([nBootstrap, size(biasLC)]);
 allBiasHC = zeros([nBootstrap, size(biasHC)]);
@@ -48,7 +48,7 @@ plotWeibullLine(allBiasLC, nBootstrap, colors);
 xlabel('log V'); ylabel('Matching Speed: $\frac{V_{1}}{V_{0}}$', 'Interpreter', 'latex');
 xticks(log(vRef)); xticklabels(arrayfun(@num2str, vRef, 'UniformOutput', false));
 title(sprintf('Subject %d Matching Speed - Low Contrast', subjectIdx));
-ylim([0, 2.5]);
+ylim([0, 3]);
 
 figure; hold on; grid on;
 plotBiasBayes(prior, noiseLevel, 0.5);
@@ -56,20 +56,15 @@ plotWeibullLine(allBiasHC, nBootstrap, colors);
 xlabel('log V'); ylabel('Matching Speed: $\frac{V_{1}}{V_{0}}$', 'Interpreter', 'latex');
 xticks(log(vRef)); xticklabels(arrayfun(@num2str, vRef, 'UniformOutput', false));
 title(sprintf('Subject %d Matching Speed - High Contrast', subjectIdx));
-ylim([0, 6]);
+ylim([0, 5]);
 
 %% Threshold
 figure; hold on; grid on;
 colors = get(gca,'colororder');
 
-meanThLC = mean(allthLC, 'omitnan');
-stdThLC  = std(allthLC, 'omitnan');
-t1 = errorbar(log(vProb), meanThLC, stdThLC*2, '--o', 'Color', colors(1, :));
+t1 = plotWeibullThres(allthLC, colors(1, :));
 plotThresBayes(prior, noiseLevel, 0.075, colors(1, :));
-
-meanThHC = mean(allthHC, 'omitnan');
-stdThHC  = std(allthHC, 'omitnan');
-t2 = errorbar(log(vProb), meanThHC, stdThHC*2, '--o', 'Color', colors(2, :));
+t2 = plotWeibullThres(allthHC, colors(2, :));
 plotThresBayes(prior, noiseLevel, 0.5, colors(2, :));
 
 xlabel('log V'); ylabel('Threshold');
