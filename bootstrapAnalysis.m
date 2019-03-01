@@ -7,7 +7,7 @@ resampleData = resample(subject);
 [sumLL, fitResults] = weibullFit(resampleData);
 [biasLC, biasHC, thLC, thHC] = extractPsychcurve(fitResults, false);
 
-nBootstrap = 200;
+nBootstrap = 100;
 
 allBiasLC = zeros([nBootstrap, size(biasLC)]);
 allBiasHC = zeros([nBootstrap, size(biasHC)]);

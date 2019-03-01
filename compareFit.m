@@ -13,7 +13,7 @@ for i = 1 : nSub
     plotPrior(para, true, false, '-');
 end
 
-plotPrior([1, 0.3, 0], true, false, '--');
+plotPrior([1, 0.33, 0], true, false, '--');
 legend('Sub1', 'Sub2', 'Sub3', 'Sub4', 'Sub5', 'Reference');
 
 nTrial = [5760, 5760, 960, 5760, 6240];
@@ -25,8 +25,7 @@ WeibullLL  = [LL1, LL2, LL3, LL4, LL5];
 figure; grid on;
 normalizedLL = (llLB - BayesianLL) ./ (llLB - WeibullLL);
 
-original  = [0.85, 0.82, 0.92, 0.82, 0.9];
-competing = [0.55, 0.5, 0.65, 0.4, 0.6];
+original  = [0.9, 0.85, 0.92, 0.82, 0.9];
 
 barPlot = bar([competing; normalizedLL; original]');
 legend('Hurliman et al.', 'Efficient Coding', 'NN2006');

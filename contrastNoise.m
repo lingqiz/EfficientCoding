@@ -46,8 +46,10 @@ subplot(3, 2, [5, 6]);
 l5 = plot(log(crst), paraSub5(4:end), '--o', 'LineWidth', 1.2, 'Color', colors(5, :));
 hold on; grid on;
 noise_sub5 = plot_fit(crst, paraSub5, colors(5, :), noise_sub5);
-pbaspect([2 1 1])
+pbaspect([2.1 1 1]);
 title('Subject 5');
+
+suptitle('Contrast-dependent Noise');
 
 %% Gaussian fit
 % load('GaussFitFinal/gauss_final.mat');
@@ -80,6 +82,7 @@ function fit = plot_fit(crst, paraSub, color, init)
     crstRange = 0.04 : 0.01 : 1;
         
     plot(log(crstRange), hc(crstRange, fit), 'k', 'LineWidth', 1.2, 'Color', color);
+    legend({sprintf('q: %.2f \nc50: %.2f', fit(3), fit(4))});
 
     xticks(log(crst)); 
     xticklabels(arrayfun(@num2str, crst, 'UniformOutput', false));
@@ -89,7 +92,7 @@ end
 
 
 function fit = fit_para(crst, noise, init)    
-    options = optimoptions('fmincon','Display','iter', ...
+    options = optimoptions('fmincon','Display','off', ...
         'OptimalityTolerance', 1e-10, 'StepTolerance', 1e-10, 'MaxFunctionEvaluations', 1e5);
     
     problem.options = options;
@@ -97,7 +100,7 @@ function fit = fit_para(crst, noise, init)
     problem.objective = @(para) sum((hc(crst, para) - noise) .^ 2);
     problem.x0 = init;
     problem.lb = [0, 0, 0, 0];
-    problem.ub = [1e6, 1e6, 10, 10];
+    problem.ub = [1e6, 1e6, 100, 100];
     
     fit = fmincon(problem);
 end

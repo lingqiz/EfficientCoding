@@ -7,8 +7,8 @@ load(strcat(dataDir, 'SUB4.mat'));
 load(strcat(dataDir, 'SUB5.mat'));
 
 noiseLB = 1e-8; noiseUB = 10;
-c0LB = 0.1;   c0UB = 10;  c0Init = 1;
-c1LB = 1e-8;  c1UB = 100; c1Init = 1;
+c0LB = 0.1;   c0UB = 10;   c0Init = 1;
+c1LB = 1e-8;  c1UB = 100;  c1Init = 0.33;
 c2LB = 1e-8;  c2UB = 0.01; c2Init = 1e-8;
 
 crstLevel = 7;
@@ -18,7 +18,6 @@ vub = [c0UB c1UB c2UB ones(1, crstLevel) * noiseUB];
 % Optimization 
 opts = optimset('fminsearch');
 opts.Display = 'iter';
-opts.TolX = 1.e-6;
 opts.MaxFunEvals = 2000;
 
 noiseInit = rand(1, crstLevel);
