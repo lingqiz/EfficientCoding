@@ -12,10 +12,12 @@ function plotWeibullLine(biasData, allBias, nBootstrap, colors)
             estimate = estBias(:, j);
             estimate = sort(estimate(~isnan(estimate)));                      
             for k = 1:3
-                allEstimate(k, j) = estimate(floor(length(estimate)*percentil(k)));                
+                idx = floor(length(estimate)*percentil(k));
+                if(idx > 0), allEstimate(k, j) = estimate(idx);
+                else, allEstimate(k, j) = NaN; end
             end
             allEstimate(1, j) = biasData(i, j);
-        end                           
+        end
         weibullLine(i) = errorbar(log(vRef)+shiftOffset(i), ...
             allEstimate(1, :), allEstimate(1, :)-allEstimate(3, :), allEstimate(2, :)-allEstimate(1, :),...
             '--o', 'Color', colors(i, :));
