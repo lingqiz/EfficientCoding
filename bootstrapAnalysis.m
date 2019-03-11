@@ -1,18 +1,17 @@
-%% Bootstrap
+%% Bootstrap (load data beforehand)
 subject = subject1;
 paraSub = paraSub1;
 subjectIdx = 1;
 
-resampleData = resample(subject);
-[sumLL, fitResults] = weibullFit(resampleData);
-[biasLC, biasHC, thLC, thHC] = extractPsychcurve(fitResults, false);
+[sumLL, fitResults] = weibullFit(subject);
+[biasLC_data, biasHC_data, thLC_data, thHC_data] = extractPsychcurve(fitResults, false);
 
-nBootstrap = 1000;
+nBootstrap = 500;
 
-allBiasLC = zeros([nBootstrap, size(biasLC)]);
-allBiasHC = zeros([nBootstrap, size(biasHC)]);
-allthLC   = zeros([nBootstrap, length(thLC)]);
-allthHC   = zeros([nBootstrap, length(thHC)]);
+allBiasLC = zeros([nBootstrap, size(biasLC_data)]);
+allBiasHC = zeros([nBootstrap, size(biasHC_data)]);
+allthLC   = zeros([nBootstrap, length(thLC_data)]);
+allthHC   = zeros([nBootstrap, length(thHC_data)]);
 
 parfor idx = 1:nBootstrap
     resampleData = resample(subject);
@@ -21,8 +20,8 @@ parfor idx = 1:nBootstrap
     
     allBiasLC(idx, :, :) = biasLC;
     allBiasHC(idx, :, :) = biasHC;
-    allthLC(idx, :)   = thLC;
-    allthHC(idx, :)   = thHC;
+    allthLC(idx, :) = thLC;
+    allthHC(idx, :) = thHC;
 end
 
 %% Analysis & Plot
@@ -44,30 +43,30 @@ figure; hold on; grid on;
 colors = get(gca,'colororder');
 
 plotBiasBayes(prior, noiseLevel, 0.075);
-plotWeibullLine(allBiasLC, nBootstrap, colors);
-xlabel('log V'); ylabel('Matching Speed: $\frac{V_{1}}{V_{0}}$', 'Interpreter', 'latex');
+plotWeibullLine(biasLC_data, allBiasLC, nBootstrap, colors);
+xlabel('Speed V [deg/sec]'); ylabel('Matching Speed: $\frac{V_{1}}{V_{0}}$', 'Interpreter', 'latex');
 xticks(log(vRef)); xticklabels(arrayfun(@num2str, vRef, 'UniformOutput', false));
 title(sprintf('Subject %d Matching Speed - Low Contrast', subjectIdx));
-ylim([0, 3]);
+% ylim([0, 3]);
 
 figure; hold on; grid on;
 plotBiasBayes(prior, noiseLevel, 0.5);
-plotWeibullLine(allBiasHC, nBootstrap, colors);
-xlabel('log V'); ylabel('Matching Speed: $\frac{V_{1}}{V_{0}}$', 'Interpreter', 'latex');
+plotWeibullLine(biasHC_data, allBiasHC, nBootstrap, colors);
+xlabel('Speed V [deg/sec]'); ylabel('Matching Speed: $\frac{V_{1}}{V_{0}}$', 'Interpreter', 'latex');
 xticks(log(vRef)); xticklabels(arrayfun(@num2str, vRef, 'UniformOutput', false));
 title(sprintf('Subject %d Matching Speed - High Contrast', subjectIdx));
-ylim([0, 5]);
+% ylim([0, 5]);
 
 %% Threshold
 figure; hold on; grid on;
 colors = get(gca,'colororder');
 
-t1 = plotWeibullThres(allthLC, colors(1, :));
+t1 = plotWeibullThres(thLC_data, allthLC, colors(1, :));
 plotThresBayes(prior, noiseLevel, 0.075, colors(1, :));
-t2 = plotWeibullThres(allthHC, colors(2, :));
+t2 = plotWeibullThres(thHC_data, allthHC, colors(2, :));
 plotThresBayes(prior, noiseLevel, 0.5, colors(2, :));
 
-xlabel('log V'); ylabel('Threshold');
+xlabel('Speed V [deg/sec]'); ylabel('Threshold');
 xticks(log(vProb)); 
 xticklabels(arrayfun(@num2str, vProb, 'UniformOutput', false));
 yticklabels(arrayfun(@(x)num2str(x, '%.2f'), exp(yticks), 'UniformOutput', false));
