@@ -1,5 +1,5 @@
 %% Mapping fit
-load('MappingFit/new_para_Feb9.mat');
+load('MappingFit/new_para_map_fit/new_para_Feb9.mat');
 load('./noiseFit.mat');
 
 crst = [0.05, 0.075, 0.1, 0.2, 0.4, 0.5, 0.8];
@@ -19,33 +19,33 @@ xlabel('Contrast'); ylabel('Noise Constant')
 
 %% Semiparametric fit
 subplot(3, 2, 1);
-l1 = plot(log(crst), paraSub1(4:end), '--o', 'LineWidth', 1.2, 'Color', colors(1, :)); 
+l1 = plot(log(crst), paraSub1(4:end), 'o', 'LineWidth', 1.2, 'Color', colors(1, :)); 
 hold on; grid on;
-noise_sub1 = plot_fit(crst, paraSub1, colors(1, :), noise_sub1);
+noise_sub1 = plot_fit(crst, paraSub1, colors(1, :), [1e4, 100, rand(1, 2)]);
 title('Subject 1');
 
 subplot(3, 2, 2);
-l2 = plot(log(crst), paraSub2(4:end), '--o', 'LineWidth', 1.2, 'Color', colors(2, :));
+l2 = plot(log(crst), paraSub2(4:end), 'o', 'LineWidth', 1.2, 'Color', colors(2, :));
 hold on; grid on;
-noise_sub2 = plot_fit(crst, paraSub2, colors(2, :), noise_sub2);
+noise_sub2 = plot_fit(crst, paraSub2, colors(2, :), [1e4, 100, rand(1, 2)]);
 title('Subject 2');
 
 subplot(3, 2, 3);
-l3 = plot(log(crst(sub3Idx)), paraSub3(3 + sub3Idx), '--o', 'LineWidth', 1.2, 'Color', colors(3, :));
+l3 = plot(log(crst(sub3Idx)), paraSub3(3 + sub3Idx), 'o', 'LineWidth', 1.2, 'Color', colors(3, :));
 hold on; grid on;
-noise_sub3 = plot_fit(crst(sub3Idx), [ones(1, 3), paraSub3(3+sub3Idx)], colors(3, :), noise_sub3);
+noise_sub3 = plot_fit(crst(sub3Idx), [ones(1, 3), paraSub3(3+sub3Idx)], colors(3, :), [2e4, 200, 1.78, 0.82]);
 title('Subject 3');
 
 subplot(3, 2, 4);
-l4 = plot(log(crst), paraSub4(4:end), '--o', 'LineWidth', 1.2, 'Color', colors(4, :));
+l4 = plot(log(crst), paraSub4(4:end), 'o', 'LineWidth', 1.2, 'Color', colors(4, :));
 hold on; grid on;
-noise_sub4 = plot_fit(crst, paraSub4, colors(4, :), noise_sub4);
+noise_sub4 = plot_fit(crst, paraSub4, colors(4, :), [1e4, 100, rand(1, 2)]);
 title('Subject 4');
 
 subplot(3, 2, [5, 6]);
-l5 = plot(log(crst), paraSub5(4:end), '--o', 'LineWidth', 1.2, 'Color', colors(5, :));
+l5 = plot(log(crst), paraSub5(4:end), 'o', 'LineWidth', 1.2, 'Color', colors(5, :));
 hold on; grid on;
-noise_sub5 = plot_fit(crst, paraSub5, colors(5, :), noise_sub5);
+noise_sub5 = plot_fit(crst, paraSub5, colors(5, :), [1e4, 100, rand(1, 2)]);
 pbaspect([2.1 1 1]);
 title('Subject 5');
 
@@ -99,8 +99,8 @@ function fit = fit_para(crst, noise, init)
     problem.solver = 'fmincon';
     problem.objective = @(para) sum((hc(crst, para) - noise) .^ 2);
     problem.x0 = init;
-    problem.lb = [0, 0, 0, 0];
-    problem.ub = [1e6, 1e6, 100, 100];
+    problem.lb = [-1e3, -1e3, 0, 0];
+    problem.ub = [1e6, 1e6, 100, 1];
     
     fit = fmincon(problem);
 end
