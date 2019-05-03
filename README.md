@@ -19,4 +19,4 @@ You will need Bayesian Adaptive Direct Search [`bads`](https://github.com/lacerb
 ## Functions
 `costfuncWrapperPwr.m` Data likelihood (for 2AFC data) and power law like prior. This function itself acts as a wrapper to `afcCostfunc.m`.
 - `afcCostfuncFixedRef.m` Calculate the choice probability based on the distribution of estimates (double integral).
-- `efficientEstimator.m` Calculate the distribution of estimates based on efficient coding model.
+- `mappingEstimator.m` Calculate the distribution of estimates based on efficient coding model.
