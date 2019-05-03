@@ -12,9 +12,9 @@ You will need Bayesian Adaptive Direct Search [`bads`](https://github.com/lacerb
 
 ## Scripts
 `main.m` Run fit on combined subject and plot the results.  
-`fitWeibull.m` Run Weibull fit to individual psychometric curve for each subject.
-`bootstrapAnalysis.m` Run bootstrap Weibull fit.
-`plotFitResults.m` and `plotPsycurves.m` visualize the data and model predictions.
+`fitWeibull.m` Run Weibull fit to individual psychometric curve for each subject.  
+`bootstrapAnalysis.m` Run bootstrap Weibull fit.  
+`plotFitResults.m` and `plotPsycurves.m` visualize the data and model predictions.  
 
 ## Functions
 `costfuncWrapperPwr.m` Data likelihood (for 2AFC data) and power law like prior. This function itself acts as a wrapper to `afcCostfunc.m`.
