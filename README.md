@@ -6,12 +6,6 @@ You will need Bayesian Adaptive Direct Search [`bads`](https://github.com/lacerb
 
 ## Scripts
 `mainOpt.m` Run fits for individual subjects. You will need our dataset to run the fit.  
-`mainBootstrap.m` Run bootstrap fit on combined subject.  
-`mainSubjects.m` Run fit on individual subjects separately and plot the results.  
-`plotSubjectFit.m` (Load in best fit parameter) Generate the result figure for each subject (with scatter plot of raw data). 
-
-## Scripts
-`main.m` Run fit on combined subject and plot the results.  
 `fitWeibull.m` Run Weibull fit to individual psychometric curve for each subject.  
 `bootstrapAnalysis.m` Run bootstrap Weibull fit.  
 `plotFitResults.m` and `plotPsycurves.m` visualize the data and model predictions.  
