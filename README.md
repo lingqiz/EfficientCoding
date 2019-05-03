@@ -16,4 +16,4 @@ You will need Bayesian Adaptive Direct Search [`bads`](https://github.com/lacerb
 - `efficientEstimator.m` Calculate the distribution of estimates based on efficient coding model.
 
 ## Approximation
-The implementation here employes various approximation based on Gaussian assumptions to speed things up and increase numerical stability, but might not be suitable for your particular problem. For vanilla bayesian observer with efficient coding implementation, please refer to: https://github.com/zlqzcc/EfficientCoding/tree/MappingNew.
+The implementation here employes various approximation based on Gaussian assumptions to speed things up and increase numerical stability, but might not be suitable for your particular problem. For the vanilla bayesian observer with efficient coding implementation, please refer to: https://github.com/zlqzcc/EfficientCoding/tree/MappingNew.
