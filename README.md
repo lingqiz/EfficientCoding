@@ -6,12 +6,6 @@ You will need Bayesian Adaptive Direct Search [`bads`](https://github.com/lacerb
 
 ## Scripts
 `mainOpt.m` Run fits for individual subjects. You will need our dataset to run the fit.
-`mainBootstrap.m` Run bootstrap fit on combined subject.  
-`mainSubjects.m` Run fit on individual subjects separately and plot the results.  
-`plotSubjectFit.m` (Load in best fit parameter) Generate the result figure for each subject (with scatter plot of raw data). 
-
-## Scripts
-`main.m` Run fit on combined subject and plot the results.  
 `fitWeibull.m` Run Weibull fit to individual psychometric curve for each subject.  
 `bootstrapAnalysis.m` Run bootstrap Weibull fit.  
 `plotFitResults.m` and `plotPsycurves.m` visualize the data and model predictions.  
@@ -22,4 +16,4 @@ You will need Bayesian Adaptive Direct Search [`bads`](https://github.com/lacerb
 - `efficientEstimator.m` Calculate the distribution of estimates based on efficient coding model.
 
 ## Approximation
-The implementation here employes various approximation based on Gaussian assumptions to speed things up and increase numerical stability, but might not be suitable for a particular problem . For vanilla bayesian observer with efficient coding implementation, please refer to: https://github.com/zlqzcc/EfficientCoding/tree/MappingNew
+The implementation here employes various approximation based on Gaussian assumptions to speed things up and increase numerical stability, but might not be suitable for your particular problem. For vanilla bayesian observer with efficient coding implementation, please refer to: https://github.com/zlqzcc/EfficientCoding/tree/MappingNew.
