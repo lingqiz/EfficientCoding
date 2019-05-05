@@ -25,7 +25,7 @@ opts.TolX = 1e-3;
 opts.MaxFunEvals = 2000;
 
 objFunc1 = @(para)costfuncWrapperPwr(subject1, para);
-paraInit = [priorInit, paraSub1(4:end + rand(1, 7)*0.01];
+paraInit = [priorInit, paraSub1(4:end) + rand(1, 7)*0.01];
 [paraSub1, fval1, ~, ~] = fminsearchbnd(objFunc1, paraInit, vlb, vub, opts);
 
 objFunc2 = @(para)costfuncWrapperPwr(subject2, para);
