@@ -104,6 +104,7 @@ function fit = fit_para(crst, noise, init)
     fit = fmincon(problem);
 end
 
+% TODO: compare fisher information?
 % TODO: lookup r_max, r_base, q and c_50 from neural data 
 % and compare to our fits
 function noise = hc(c, para)

@@ -13,8 +13,11 @@ for i = 1 : nSub
     plotPrior(para, true, false, '-');
 end
 
+load('combinedGauss.mat');
+plotPrior(paraSub, true, false, '-');
+
 plotPrior([1, 0.33, 0], true, false, '--');
-legend('Sub1', 'Sub2', 'Sub3', 'Sub4', 'Sub5', 'Reference');
+legend('Sub1', 'Sub2', 'Sub3', 'Sub4', 'Sub5', 'Combined', 'Reference');
 
 nTrial = [5760, 5760, 960, 5760, 6240];
 llLB = -log(0.5) * nTrial;
