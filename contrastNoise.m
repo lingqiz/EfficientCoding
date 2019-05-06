@@ -1,6 +1,5 @@
 %% Mapping fit
 load('MappingFit/new_para_map_fit/new_para_Feb9.mat');
-load('./noiseFit.mat');
 
 crst = [0.05, 0.075, 0.1, 0.2, 0.4, 0.5, 0.8];
 sub3Idx = [2, 6, 7];
@@ -111,7 +110,7 @@ function noise = hc(c, para)
     rmax = para(1); rbase = para(2); 
     q = para(3); c50 = para(4);
     
-    rate  = rmax * (c .^ q) ./ (c .^ q + c50) + rbase;
+    rate  = rmax * (c .^ q) ./ (c .^ q + c50 .^ q) + rbase;
     noise = 1 ./ sqrt(rate); 
 end
 
