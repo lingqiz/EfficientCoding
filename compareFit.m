@@ -1,4 +1,4 @@
-load('./GaussFit/gauss_final_0.mat');
+load('./MappingFit/new_para_map_fit/new_para_Feb9.mat');
 load('./weibullFitAll.mat');
 
 figure; hold on; grid on;
@@ -26,12 +26,12 @@ original  = [0.9, 0.85, 0.92, 0.82, 0.9];
 figure; grid on;
 normalizedLL = (llLB - BayesianLL) ./ (llLB - WeibullLL);
 
-load('./GaussFit/fixed_prior_fit_01.mat');
+load('./MappingFit/new_para_map_fit/fixed_prior_01.mat');
 fixedPriorLL = [fval1, fval2, fval3, fval4, fval5];
 nrmFixedPriorLL = (llLB - fixedPriorLL) ./ (llLB - WeibullLL);
 
 barPlot = bar([nrmFixedPriorLL; normalizedLL; original]');
-legend('Hurliman et al.', 'Efficient Coding', 'NN2006');
+legend('Neural Prior', 'Efficient Coding', 'NN2006');
 
 barPlot(1).FaceColor = colors(1, :);
 barPlot(2).FaceColor = colors(2, :);
@@ -52,11 +52,11 @@ priorUnm  = 1.0 ./ ((abs(domain) .^ c0) + c1) + c2;
 nrmConst  = 1.0 / (trapz(domain, priorUnm));
 prior = @(support) (1.0 ./ ((abs(support) .^ c0) + c1) + c2) * nrmConst;
 
-UB = 20; priorSupport = (0.1 : 0.001 : UB);
+UB = 40; priorSupport = (0.1 : 0.001 : UB);
 if logSpace
     plot(log(priorSupport), log(prior(priorSupport)), style, 'LineWidth', 2);
     
-    labelPos = [0.1, 0.25, 0.5, 1, 2.0 : 2 : 12.0, 20];
+    labelPos = [0.1, 0.25, 0.5, 1, 2.0, 4.0, 8.0, 20, 40];
     xticks(log(labelPos)); 
     xticklabels(arrayfun(@num2str, labelPos, 'UniformOutput', false));
     
