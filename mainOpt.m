@@ -7,6 +7,7 @@ load(strcat(dataDir, 'SUB3.mat'));
 load(strcat(dataDir, 'SUB4.mat'));
 load(strcat(dataDir, 'SUB5.mat'));
 
+% fminsearch setup
 noiseLB = 1e-8; 
 noiseUB = 0.4;
 c0LB = 0.1;   c0UB = 1.6;  c0Init = 1;
@@ -18,10 +19,11 @@ crstLevel = 7;
 vlb = [c0LB c1LB c2LB ones(1, crstLevel) * noiseLB];
 vub = [c0UB c1UB c2UB ones(1, crstLevel) * noiseUB];
 
-% Optimization 
+% optimization parameters
 opts = optimset('fminsearch');
 opts.Display = 'iter';
 opts.TolX = 1e-3;
+opts.TolFun = 1e-3;
 opts.MaxFunEvals = 2000;
 
 objFunc1 = @(para)costfuncWrapperPwr(subject1, para);
