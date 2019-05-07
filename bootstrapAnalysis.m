@@ -34,7 +34,7 @@ vProb     = [0.5, 1, 2, 4, 8, 12];
 vRef      = [0.5, 1, 2, 4, 8, 12];
 
 % Computing Prior Probability
-domain    = -100 : 0.01 : 100; 
+domain    = -100 : 0.01 : 100;
 priorUnm  = 1.0 ./ ((abs(domain) .^ c0) + c1) + c2;
 nrmConst  = 1.0 / (trapz(domain, priorUnm));
 prior = @(support) (1.0 ./ ((abs(support) .^ c0) + c1) + c2) * nrmConst;
@@ -61,14 +61,22 @@ title(sprintf('Subject %d Matching Speed - High Contrast', subjectIdx));
 figure; hold on; grid on;
 colors = get(gca,'colororder');
 
-t1 = plotWeibullThres(thLC_data, allthLC, colors(1, :));
-plotThresBayes(prior, noiseLevel, 0.075, colors(1, :));
-t2 = plotWeibullThres(thHC_data, allthHC, colors(2, :));
-plotThresBayes(prior, noiseLevel, 0.5, colors(2, :));
+relative = true;
+t1 = plotWeibullThres(thLC_data, allthLC, colors(1, :), relative);
+plotThresBayes(prior, noiseLevel, 0.075, colors(1, :), relative);
+t2 = plotWeibullThres(thHC_data, allthHC, colors(2, :), relative);
+plotThresBayes(prior, noiseLevel, 0.5, colors(2, :), relative);
 
-xlabel('Speed V [deg/sec]'); ylabel('Threshold');
-xticks(log(vProb)); 
+if relative
+    yticklabels(arrayfun(@(x)num2str(x, '%.2f'), yticks, 'UniformOutput', false));
+    ylabel('Weber Fraction');
+else
+    yticklabels(arrayfun(@(x)num2str(x, '%.2f'), exp(yticks), 'UniformOutput', false));
+    ylabel('Threshold');
+end
+
+xlabel('Speed V [deg/sec]');
+xticks(log(vProb));
 xticklabels(arrayfun(@num2str, vProb, 'UniformOutput', false));
-yticklabels(arrayfun(@(x)num2str(x, '%.2f'), exp(yticks), 'UniformOutput', false));
 legend([t1, t2], {'0.075', '0.5'});
 title(sprintf('Subject %d Threshold', subjectIdx));

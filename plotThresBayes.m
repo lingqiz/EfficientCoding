@@ -1,4 +1,4 @@
-function plotThresBayes(prior, noiseLevel, refCrstLevel, color)
+function plotThresBayes(prior, noiseLevel, refCrstLevel, color, relative)
 
 crstLevel  = [0.05, 0.075, 0.1, 0.2, 0.4, 0.5, 0.8];
 targetDPrime = 0.955; sigma = 0.005;
@@ -27,8 +27,11 @@ for i = 1 : length(vRef)
     thresholdV(i) = deltaEst;
 end
 
-plot(log(vRef), log(thresholdV), 'LineWidth', 2, 'Color', color);
-
+if relative
+    plot(log(vRef), thresholdV ./ vRef, 'LineWidth', 2, 'Color', color);
+else
+    plot(log(vRef), log(thresholdV), 'LineWidth', 2, 'Color', color);
+end
 
 end
 

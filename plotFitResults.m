@@ -1,5 +1,5 @@
 load('./AllFitRes/weibullFit.mat');
-load('./GaussFit/gauss_final.mat');
+load('./GaussFit/gauss_final_2.mat');
 
 subIdx = 1;
 allPara    = [paraSub1; paraSub2; paraSub3; paraSub4; paraSub5];
