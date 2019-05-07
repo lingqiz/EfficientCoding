@@ -13,7 +13,7 @@ for i = 1 : nSub
     plotPrior(para, true, false, '-');
 end
 
-load('combinedGauss.mat');
+load('combinedMapping.mat');
 plotPrior(paraSub, true, false, '-');
 
 plotPrior([1, 0.33, 0], true, false, '--');
