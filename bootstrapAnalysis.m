@@ -61,11 +61,11 @@ title(sprintf('Subject %d Matching Speed - High Contrast', subjectIdx));
 figure; hold on; grid on;
 colors = get(gca,'colororder');
 
-relative = true;
-t1 = plotWeibullThres(thLC_data, allthLC, colors(1, :), relative);
-plotThresBayes(prior, noiseLevel, 0.075, colors(1, :), relative);
-t2 = plotWeibullThres(thHC_data, allthHC, colors(2, :), relative);
-plotThresBayes(prior, noiseLevel, 0.5, colors(2, :), relative);
+relative = false; sd = false;
+t1 = plotWeibullThres(thLC_data, allthLC, colors(1, :), relative, sd);
+plotThresBayes(prior, noiseLevel, 0.075, colors(1, :),  relative);
+t2 = plotWeibullThres(thHC_data, allthHC, colors(2, :), relative, sd);
+plotThresBayes(prior, noiseLevel, 0.5, colors(2, :),    relative);
 
 if relative
     yticklabels(arrayfun(@(x)num2str(x, '%.2f'), yticks, 'UniformOutput', false));

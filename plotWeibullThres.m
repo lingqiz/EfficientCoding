@@ -1,7 +1,13 @@
-function line = plotWeibullThres(thData, threshold, color, relative)
+function line = plotWeibullThres(thData, threshold, color, relative, sd)
 
 vProb = [0.5, 1, 2, 4, 8, 12];
-percentil   = [0.5, 0.975, 0.025];
+if sd
+    percentil   = [0.5, 0.841, 0.159];
+else
+    percentil   = [0.5, 0.975, 0.025];
+end
+
+
 allEstimate = zeros(3, length(vProb));
 
 for i = 1:length(vProb)
