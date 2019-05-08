@@ -25,7 +25,7 @@ if(isempty(mean) || isempty(std))
 end
 
     function [esti] = decoder(msmt)
-        sampleSize = 1000; 
+        sampleSize = 2000; 
         baseStdMsmt = baseStd / prior(msmt);        
                 
         estSpaceLB = msmt - 1 * baseStdMsmt;
