@@ -1,5 +1,5 @@
-function [ negLikelihood ] = costfuncWrapperPwr(subjectData, parameters)
-%COSTFUNCWRAPPERPWR Interface function for running the optimization
+function [ negLikelihood ] = costfuncWrapperGamma(subjectData, parameters)
+%COSTFUNCWRAPPERGAMMA Interface function for running the optimization
 
 % Prior prob function handler
 prior = @(support) gampdf(abs(support), parameters(1), parameters(2));
