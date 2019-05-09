@@ -52,12 +52,11 @@ objFunc5 = @(para)costfuncWrapperGamma(subject5, para);
 
 %% Gaussian prior, setup
 noiseLB = 1e-4; noiseUB = 10;
-c0LB = 0;    c0UB = 0;  c0Init = 0;
-c1LB = 1e-2; c1UB = 30; c1Init = 15;
+c0LB = 0.1; c0UB = 30; c0Init = 5;
 
 crstLevel = 7;
-vlb = [c0LB c1LB ones(1, crstLevel) * noiseLB];
-vub = [c0UB c1UB ones(1, crstLevel) * noiseUB];
+vlb = [c0LB  ones(1, crstLevel) * noiseLB];
+vub = [c0UB  ones(1, crstLevel) * noiseUB];
 
 % Optimization
 opts = optimset('fminsearch');
@@ -68,7 +67,7 @@ opts.MaxFunEvals = 5000;
 
 %% Gaussian Prior, combined subject
 combinedData = [subject1, subject2, subject3, subject4, subject5];
-paraInit = [c0Init, c1Init, paraSub(4:end)];
+paraInit = [c0Init, paraSub(4:end)];
 objFunc = @(para)costfuncWrapperGauss(combinedData, para);
 [paraSub, fval, ~, ~] = fminsearchbnd(objFunc, paraInit, vlb, vub, opts);
 

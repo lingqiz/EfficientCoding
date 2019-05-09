@@ -10,10 +10,10 @@ allPara = [paraSub1; paraSub2; paraSub3; paraSub4; paraSub5];
 
 for i = 1 : nSub
     para = allPara(i, :);
-    plotPrior(para, true, false, '-');
+    plotPriorWrapper(para, true, false, '-');
 end
 
-plotPrior([1, 1, 0.3], true, false, '--');
+plotPriorWrapper([1, 1, 0.3], true, false, '--');
 legend('Sub1', 'Sub2', 'Sub3', 'Sub4', 'Sub5', 'Reference');
 
 nTrial = [5760, 5760, 960, 5760, 6240];
@@ -36,13 +36,13 @@ barPlot(2).FaceColor = colors(2, :);
 barPlot(3).FaceColor = colors(5, :);
 
 yticks(0 : 0.2 : 1); grid on;
-yticklabels(arrayfun(@num2str, 0 : 0.2 : 1, 'UniformOutput', false));    
+yticklabels(arrayfun(@num2str, 0 : 0.2 : 1, 'UniformOutput', false));
 
 title('Normalized Log Likelihood');
 xlabel('Subject'); ylabel('Normalized Log Probability');
 
 %% Compare fit for combined subject
-figure; hold on; 
+figure('DefaultAxesFontSize', 15); hold on;
 colors = get(gca,'colororder');
 
 load('./CombinedFit/combinedWeibull.mat');
@@ -59,10 +59,10 @@ normalizedGamma = (llLB - fval) / (llLB - WeibullLL);
 load('./CombinedFit/combinedLogLinear.mat');
 normalizedLoglinear = (llLB - fval) / (llLB - WeibullLL);
 
-load('./CombinedFit/combinedGaussPrior.mat');
+load('./CombinedFit/combinedGaussUni.mat');
 normalizedGauss = (llLB - fval) / (llLB - WeibullLL);
 
-labels = categorical({'power law','gamma','gaussian', 'log linear'});
+labels = categorical({'Power Law','Gamma','Gaussian', 'Log Linear'});
 barPlot = bar(labels, [normalizedPwr; normalizedGamma; normalizedGauss; normalizedLoglinear]);
 ylim([0, 1]);
 
@@ -72,38 +72,83 @@ barPlot.CData(2,:) = colors(2, :);
 barPlot.CData(3,:) = colors(3, :);
 barPlot.CData(4,:) = colors(4, :);
 
+%% Compare different fits
+figure; hold on; grid on;
+
+load('./CombinedFit/combinedGauss.mat');
+c0 = paraSub(1); c1 = paraSub(2); c2 = paraSub(3);
+domain    = -100 : 0.01 : 100;
+priorUnm  = 1.0 ./ ((abs(domain) .^ c0) + c1) + c2;
+nrmConst  = 1.0 ./ (trapz(domain, priorUnm));
+prior = @(support) (1.0 ./ ((abs(support) .^ c0) + c1) + c2) * nrmConst;
+plotPrior(prior, true, false, '-');
+
+load('./CombinedFit/combinedGamma.mat');
+noiseLevel = paraSub(3:end);
+prior = @(support) gampdf(abs(support), paraSub(1), paraSub(2)) * 0.5;
+plotPrior(prior, true, false, '-');
+
+load('./CombinedFit/combinedLogLinear.mat');
+nPoint = 20;
+refLB  = log(0.1);
+refUB  = log(100);
+delta  = (refUB - refLB) / (nPoint - 1);
+refPoint = refLB : delta : refUB;
+refValue = paraSub(1: length(refPoint));
+
+logLinearPrior = ...
+    @(support) exp(interp1(refPoint, refValue, log(abs(support)), 'spline', 'extrap'));
+
+domain = 0.1 : 0.01 : 100;
+nrmConst = 1.0 / trapz(domain, logLinearPrior(domain));
+
+prior = @(support)  logLinearPrior(support) * nrmConst * 0.5;
+plotPrior(prior, true, false, '-');
+
+load('./CombinedFit/combinedGaussUni.mat');
+prior = @(support) (0.9 * normpdf(abs(support), 0, paraSub(1)) + 0.002) * 0.5;
+plotPrior(prior, true, false, '-');
+
+plotPriorWrapper([1, 1, 0.3], true, false, '--');
+legend({'Power Law', 'Gamma', 'Log Linear', 'Gaussian', 'Neural Prior'});
+
 %% Helper functions
-function plotPrior(para, logSpace, transform, style)
+function plotPriorWrapper(para, logSpace, transform, style)
 c0 = para(1); c1 = para(2); c2 = para(3);
 
-domain    = -20 : 0.01 : 20; 
+domain    = -100 : 0.01 : 100;
 priorUnm  = 1.0 ./ (c1 * (abs(domain) .^ c0) + c2);
 nrmConst  = 1.0 / (trapz(domain, priorUnm));
-prior = @(support) (1 ./ (c1 * (abs(support) .^ c0) + c2)) * nrmConst; 
+prior = @(support) (1 ./ (c1 * (abs(support) .^ c0) + c2)) * nrmConst;
 
-% Shape of Prior 
-UB = 20; priorSupport = (0.25 : 0.001 : UB);
+plotPrior(prior, logSpace, transform, style)
+end
+
+
+function plotPrior(prior, logSpace, transform, style)
+% Shape of Prior
+UB = 40; priorSupport = (0.1 : 0.001 : UB);
 if logSpace
     plot(log(priorSupport), log(prior(priorSupport)), style, 'LineWidth', 2);
     
     labelPos = [0.25, 0.5, 1, 2.1 : 2 : 12.1, 20];
-    xticks(log(labelPos)); 
+    xticks(log(labelPos));
     xticklabels(arrayfun(@num2str, labelPos, 'UniformOutput', false));
     
     probPos = 0.01 : 0.05 : 0.3;
-    yticks(log(probPos)); 
+    yticks(log(probPos));
     yticklabels(arrayfun(@num2str, probPos, 'UniformOutput', false));
 else
     priorProb = prior(priorSupport);
-    if transform  
-    	priorProb = cumtrapz(priorSupport, priorProb);     
+    if transform
+        priorProb = cumtrapz(priorSupport, priorProb);
     end
     plot((priorSupport), (priorProb), style, 'LineWidth', 2);
     xlim([0.01, UB]);
 end
 
 ylim([-7, -1]);
-title('Prior Across All Subjects');
+title('Prior Distribution');
 xlabel('V'); ylabel('P(V)');
 
 end

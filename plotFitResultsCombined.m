@@ -23,10 +23,10 @@ plotResults(prior, noiseLevel, weibullFitCombined, 'Combined Subject: ');
 
 %% Gaussian Prior
 load('./CombinedFit/combinedWeibull.mat');
-load('./CombinedFit/combinedGaussPrior.mat');
+load('./CombinedFit/combinedGaussUni.mat');
 
-noiseLevel = paraSub(3:end);
-prior = @(support) normpdf(abs(support), paraSub(1), paraSub(2)) * 0.5;
+noiseLevel = paraSub(2:end);
+prior = @(support) 0.9 * normpdf(abs(support), 0, paraSub(1)) + 0.002 ;
 
 plotResults(prior, noiseLevel, weibullFitCombined, 'Combined Subject: ');
 
@@ -98,7 +98,7 @@ title(strcat(titleText, 'Absolute Threshold'));
                 targetEst = estiVRef(j);
                 vTestMatch(j) = mean(vTest(estiVTest > targetEst - sigma & estiVTest < targetEst + sigma));
             end
-            plot(log(vRef), vTestMatch ./ vRef, 'LineWidth', 2);
+            plot(log(vRef(~isnan(vTestMatch))), vTestMatch(~isnan(vTestMatch)) ./ vRef(~isnan(vTestMatch)), 'LineWidth', 2);
         end
         
         % Plot matching speed computed from Weibull fit
@@ -129,7 +129,7 @@ title(strcat(titleText, 'Absolute Threshold'));
     function dataLine = plotThreshold(refCrstLevel, relative, colorIdx)
         colors = get(gca,'colororder');
         
-        targetDPrime = 0.955; sigma = 0.005;
+        targetDPrime = 0.955; sigma = 0.01;
         vRef = 0.5 : 0.2 : 12; baseNoise = noiseLevel(crstLevel == refCrstLevel);
         thresholdV = zeros(1, length(vRef));
         
