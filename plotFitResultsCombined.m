@@ -34,7 +34,7 @@ plotResults(prior, noiseLevel, weibullFitCombined, 'Combined Subject: ');
 load('./CombinedFit/combinedWeibull.mat');
 load('./CombinedFit/combinedLinear.mat');
 
-nPoint = 10;
+nPoint = 20;
 refLB  = log(0.1);
 refUB  = log(100);
 delta  = (refUB - refLB) / (nPoint - 1);
@@ -44,7 +44,7 @@ refValue = paraSub(1: length(refPoint));
 logLinearPrior = ...
     @(support) exp(interp1(refPoint, refValue, log(abs(support)), 'spline', 'extrap'));
 
-domain = -100 : 0.01 : 100;
+domain = 0.1 : 0.01 : 100;
 nrmConst = 1.0 / trapz(domain, logLinearPrior(domain));
 
 prior = @(support)  logLinearPrior(support) * nrmConst;

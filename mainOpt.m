@@ -73,15 +73,26 @@ objFunc = @(para)costfuncWrapperGauss(combinedData, para);
 [paraSub, fval, ~, ~] = fminsearchbnd(objFunc, paraInit, vlb, vub, opts);
 
 %% Log linear prior, setup
-nPoints = 10;
+c0 = paraSub(1); c1 = paraSub(2); c2 = paraSub(3);
+
+domain    = -100 : 0.01 : 100;
+priorUnm  = 1.0 ./ ((abs(domain) .^ c0) + c1) + c2;
+nrmConst  = 1.0 ./ (trapz(domain, priorUnm));
+priorPwrlaw = @(support) (1.0 ./ ((abs(support) .^ c0) + c1) + c2) * nrmConst;
+
+nPoints = 20;
 noiseLB = 1e-4; noiseUB = 10;
-probLB  = -10;  probUB = 2; 
+probLB  = -10;  probUB = 1; 
 
 crstLevel = 7;
 vlb = [ones(1, nPoints) * probLB, ones(1, crstLevel) * noiseLB];
 vub = [ones(1, nPoints) * probUB, ones(1, crstLevel) * noiseUB];
 
-probInit = log(ones(1, nPoints) * 1/200);
+refLB  = log(0.1);
+refUB  = log(100);
+delta  = (refUB - refLB) / (nPoints - 1);
+refPoint = refLB : delta : refUB;
+refValue = log(priorPwrlaw(exp(refPoint)));
 
 % Optimization
 opts = optimset('fminsearch');
@@ -92,6 +103,6 @@ opts.MaxFunEvals = 5000;
 
 %% Log linear prior, combined subject
 combinedData = [subject1, subject2, subject3, subject4, subject5];
-paraInit = [probInit, paraSub(4:end)];
+paraInit = [refValue, paraSub(4:end)];
 objFunc = @(para)costfuncWrapperLinear(combinedData, para);
 [paraSub, fval, ~, ~] = fminsearchbnd(objFunc, paraInit, vlb, vub, opts);

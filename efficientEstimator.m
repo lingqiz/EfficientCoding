@@ -19,8 +19,7 @@ else
     std  = Inf;
 end
 
-if(isempty(mean) || isempty(std))
-    warning('Empty estimate.')
+if(isempty(mean) || isempty(std))    
     mean = vProb;
     std  = Inf;
 end
