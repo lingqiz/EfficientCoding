@@ -94,14 +94,13 @@ delta  = (refUB - refLB) / (nPoints - 1);
 refPoint = refLB : delta : refUB;
 refValue = log(priorPwrlaw(exp(refPoint)));
 
-% Optimization
+%% Log linear prior, combined subject, fminsearch
 opts = optimset('fminsearch');
 opts.Display = 'iter';
 opts.TolX = 1.e-3;
 opts.TolFun = 1.e-3;
 opts.MaxFunEvals = 5000;
 
-%% Log linear prior, combined subject
 combinedData = [subject1, subject2, subject3, subject4, subject5];
 paraInit = [refValue, paraSub(4:end)];
 objFunc = @(para)costfuncWrapperLinear(combinedData, para);

@@ -56,17 +56,21 @@ normalizedPwr = (llLB - fval) / (llLB - WeibullLL);
 load('./CombinedFit/combinedGamma.mat');
 normalizedGamma = (llLB - fval) / (llLB - WeibullLL);
 
+load('./CombinedFit/combinedLogLinear.mat');
+normalizedLoglinear = (llLB - fval) / (llLB - WeibullLL);
+
 load('./CombinedFit/combinedGaussPrior.mat');
 normalizedGauss = (llLB - fval) / (llLB - WeibullLL);
 
-labels = categorical({'power law','gamma','gaussian'});
-barPlot = bar(labels, [normalizedPwr; normalizedGamma; normalizedGauss]);
+labels = categorical({'power law','gamma','gaussian', 'log linear'});
+barPlot = bar(labels, [normalizedPwr; normalizedGamma; normalizedGauss; normalizedLoglinear]);
 ylim([0, 1]);
 
 barPlot.FaceColor = 'flat';
 barPlot.CData(1,:) = colors(1, :);
 barPlot.CData(2,:) = colors(2, :);
 barPlot.CData(3,:) = colors(3, :);
+barPlot.CData(4,:) = colors(4, :);
 
 %% Helper functions
 function plotPrior(para, logSpace, transform, style)

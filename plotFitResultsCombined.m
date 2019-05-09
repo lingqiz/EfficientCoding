@@ -32,7 +32,7 @@ plotResults(prior, noiseLevel, weibullFitCombined, 'Combined Subject: ');
 
 %% Log Linear Prior
 load('./CombinedFit/combinedWeibull.mat');
-load('./CombinedFit/combinedLinear.mat');
+load('./CombinedFit/combinedLogLinear.mat');
 
 nPoint = 20;
 refLB  = log(0.1);
@@ -47,7 +47,7 @@ logLinearPrior = ...
 domain = 0.1 : 0.01 : 100;
 nrmConst = 1.0 / trapz(domain, logLinearPrior(domain));
 
-prior = @(support)  logLinearPrior(support) * nrmConst;
+prior = @(support)  logLinearPrior(support) * nrmConst * 0.5;
 plotResults(prior, paraSub(length(refPoint) + 1 : end), weibullFitCombined, 'Combined Subject: ');
 
 %% Helper function
@@ -58,7 +58,7 @@ crstLevel  = [0.05, 0.075, 0.1, 0.2, 0.4, 0.5, 0.8];
 vProb      = [0.5, 1, 2, 4, 8, 12];
 
 % Shape of Prior
-figure; priorSupport = (0 : 0.01 : 15);
+figure; priorSupport = (0.1 : 0.01 : 40);
 plot(log(priorSupport), log(prior(priorSupport)), 'LineWidth', 2);
 
 grid on;
@@ -79,7 +79,7 @@ legend([l1, l2], {'0.075', '0.5'});
 title(strcat(titleText, 'Absolute Threshold'));
 
     function plotMatchSpeed(refCrstLevel)
-        vRef = 0.5 : 0.1 : 12; baseNoise = noiseLevel(crstLevel == refCrstLevel);
+        vRef = 0.5 : 0.25 : 12; baseNoise = noiseLevel(crstLevel == refCrstLevel);
         estVRef = @(vRef) efficientEstimator(prior, baseNoise, vRef);
         estiVRef = arrayfun(estVRef, vRef);
         

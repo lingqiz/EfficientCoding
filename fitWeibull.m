@@ -18,7 +18,7 @@ combined = [subject1, subject2, subject3, subject4, subject5];
 
 %% loss function, optimization
 function [sumLL, fitResults] = weibullFit(subjectData)
-sumLL = 0; 
+sumLL = 0;
 
 vlb = [0 0]; vub = [Inf, Inf];
 crtRef  = [0.075, 0.5];
@@ -35,17 +35,17 @@ for i = 1 : length(crtRef)
             testCrst = crtTest(k);
             
             data = subjectData([3, 9], subjectData(1, :) == refV ...
-            & subjectData(2, :) == refCrst & subjectData(4, :) == testCrst);
-                                
+                & subjectData(2, :) == refCrst & subjectData(4, :) == testCrst);
+            
             objFunc = @(para) weibullCstfunc(data(1, :), data(2, :), para);
             options = optimoptions('fmincon','Diagnostics','off','Display',...
-            'iter','Algorithm','interior-point','MaxIter',200);
-            [fitPara, fval, ~, ~] = fmincon(objFunc, [1, 1], [], [], [], [], vlb, vub, [], options);            
+                'iter','Algorithm','interior-point','MaxIter',200);
+            [fitPara, fval, ~, ~] = fmincon(objFunc, [1, 1], [], [], [], [], vlb, vub, [], options);
             
             fitResults(i, j, k, :) = fitPara;
-            sumLL = sumLL + fval; 
+            sumLL = sumLL + fval;
         end
     end
 end
-   
+
 end
