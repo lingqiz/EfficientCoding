@@ -45,8 +45,8 @@ xlabel('Subject'); ylabel('Normalized Log Probability');
 figure; hold on; 
 colors = get(gca,'colororder');
 
-load('./AllFitRes/weibullFitAll.mat');
-WeibullLL = sum([LL1, LL2, LL3, LL4, LL5]);
+load('./CombinedFit/combinedWeibull.mat');
+WeibullLL = LL;
 nTrial = [5760, 5760, 960, 5760, 6240];
 llLB = sum(nTrial) * -log(0.5);
 

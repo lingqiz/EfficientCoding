@@ -1,3 +1,4 @@
+%% individual fit
 dataDir = './NN2006/';
 load(strcat(dataDir, 'SUB1.mat'));
 load(strcat(dataDir, 'SUB2.mat'));
@@ -11,6 +12,11 @@ load(strcat(dataDir, 'SUB5.mat'));
 [LL4, weibullFit4] = weibullFit(subject4);
 [LL5, weibullFit5] = weibullFit(subject5);
 
+%% combined fit
+combined = [subject1, subject2, subject3, subject4, subject5];
+[LL, weibullFitCombined] = weibullFit(combined);
+
+%% loss function, optimization
 function [sumLL, fitResults] = weibullFit(subjectData)
 sumLL = 0; 
 
