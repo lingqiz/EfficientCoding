@@ -30,6 +30,26 @@ prior = @(support) normpdf(abs(support), paraSub(1), paraSub(2)) * 0.5;
 
 plotResults(prior, noiseLevel, weibullFitCombined, 'Combined Subject: ');
 
+%% Log Linear Prior
+load('./CombinedFit/combinedWeibull.mat');
+load('./CombinedFit/combinedLinear.mat');
+
+nPoint = 10;
+refLB  = log(0.1);
+refUB  = log(100);
+delta  = (refUB - refLB) / (nPoint - 1);
+refPoint = refLB : delta : refUB;
+refValue = paraSub(1: length(refPoint));
+
+logLinearPrior = ...
+    @(support) exp(interp1(refPoint, refValue, log(abs(support)), 'spline', 'extrap'));
+
+domain = -100 : 0.01 : 100;
+nrmConst = 1.0 / trapz(domain, logLinearPrior(domain));
+
+prior = @(support)  logLinearPrior(support) * nrmConst;
+plotResults(prior, paraSub(length(refPoint) + 1 : end), weibullFitCombined, 'Combined Subject: ');
+
 %% Helper function
 function plotResults(prior, noiseLevel, weibullPara, titleText)
 
@@ -165,6 +185,3 @@ title(strcat(titleText, 'Absolute Threshold'));
         xticklabels(arrayfun(@num2str, vProb, 'UniformOutput', false));
     end
 end
-
-
-

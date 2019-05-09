@@ -25,12 +25,6 @@ if(isempty(mean) || isempty(std))
     std  = Inf;
 end
 
-if(isnan(mean) || isnan(std))
-    warning('NaN estimate.')
-    mean = vProb;
-    std  = Inf;
-end
-
     function [esti] = decoder(msmt)
         sampleSize = 2000; 
         baseStdMsmt = baseStd / prior(msmt);        

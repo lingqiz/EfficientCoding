@@ -5,7 +5,7 @@ load(strcat(dataDir, 'SUB2.mat'));
 load(strcat(dataDir, 'SUB3.mat'));
 load(strcat(dataDir, 'SUB4.mat'));
 load(strcat(dataDir, 'SUB5.mat'));
-load('./combinedGauss.mat');
+load('./CombinedFit/combinedGauss.mat');
 
 %% Gamma prior, setup
 noiseLB = 1e-4; noiseUB = 10;
@@ -53,7 +53,7 @@ objFunc5 = @(para)costfuncWrapperGamma(subject5, para);
 %% Gaussian prior, setup
 noiseLB = 1e-4; noiseUB = 10;
 c0LB = 0;    c0UB = 0;  c0Init = 0;
-c1LB = 1e-2; c1UB = 30; c1Init = 5;
+c1LB = 1e-2; c1UB = 30; c1Init = 15;
 
 crstLevel = 7;
 vlb = [c0LB c1LB ones(1, crstLevel) * noiseLB];
@@ -70,4 +70,28 @@ opts.MaxFunEvals = 5000;
 combinedData = [subject1, subject2, subject3, subject4, subject5];
 paraInit = [c0Init, c1Init, paraSub(4:end)];
 objFunc = @(para)costfuncWrapperGauss(combinedData, para);
+[paraSub, fval, ~, ~] = fminsearchbnd(objFunc, paraInit, vlb, vub, opts);
+
+%% Log linear prior, setup
+nPoints = 10;
+noiseLB = 1e-4; noiseUB = 10;
+probLB  = -10;  probUB = 2; 
+
+crstLevel = 7;
+vlb = [ones(1, nPoints) * probLB, ones(1, crstLevel) * noiseLB];
+vub = [ones(1, nPoints) * probUB, ones(1, crstLevel) * noiseUB];
+
+probInit = log(ones(1, nPoints) * 1/200);
+
+% Optimization
+opts = optimset('fminsearch');
+opts.Display = 'iter';
+opts.TolX = 1.e-3;
+opts.TolFun = 1.e-3;
+opts.MaxFunEvals = 5000;
+
+%% Log linear prior, combined subject
+combinedData = [subject1, subject2, subject3, subject4, subject5];
+paraInit = [probInit, paraSub(4:end)];
+objFunc = @(para)costfuncWrapperLinear(combinedData, para);
 [paraSub, fval, ~, ~] = fminsearchbnd(objFunc, paraInit, vlb, vub, opts);

@@ -3,14 +3,14 @@ function [ negLikelihood ] = costfuncWrapperLinear(subjectData, parameters)
 
 % Prior prob function handler
 nPoint = 10;
-refLB  = log(0.1)
-refUB  = log(100)
+refLB  = log(0.1);
+refUB  = log(100);
 delta  = (refUB - refLB) / (nPoint - 1);
 refPoint = refLB : delta : refUB;
 refValue = parameters(1: length(refPoint));
 
 logLinearPrior = ...
-    @(support) exp(interp1(refPoint), refValue, log(abs(support)), 'spline', 'extrap');
+    @(support) exp(interp1(refPoint, refValue, log(abs(support)), 'spline', 'extrap'));
 
 domain = -100 : 0.01 : 100;
 nrmConst = 1.0 / trapz(domain, logLinearPrior(domain));
