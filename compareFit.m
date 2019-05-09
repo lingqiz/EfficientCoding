@@ -1,3 +1,4 @@
+%% Compare fit for individual subject
 load('./AllFitRes/BayesianFitAll1.mat');
 load('./AllFitRes/weibullFitAll.mat');
 
@@ -40,6 +41,34 @@ yticklabels(arrayfun(@num2str, 0 : 0.2 : 1, 'UniformOutput', false));
 title('Normalized Log Likelihood');
 xlabel('Subject'); ylabel('Normalized Log Probability');
 
+%% Compare fit for combined subject
+figure; hold on; 
+colors = get(gca,'colororder');
+
+load('./AllFitRes/weibullFitAll.mat');
+WeibullLL = sum([LL1, LL2, LL3, LL4, LL5]);
+nTrial = [5760, 5760, 960, 5760, 6240];
+llLB = sum(nTrial) * -log(0.5);
+
+load('./CombinedFit/combinedGauss.mat');
+normalizedPwr = (llLB - fval) / (llLB - WeibullLL);
+
+load('./CombinedFit/combinedGamma.mat');
+normalizedGamma = (llLB - fval) / (llLB - WeibullLL);
+
+load('./CombinedFit/combinedGaussPrior.mat');
+normalizedGauss = (llLB - fval) / (llLB - WeibullLL);
+
+labels = categorical({'power law','gamma','gaussian'});
+barPlot = bar(labels, [normalizedPwr; normalizedGamma; normalizedGauss]);
+ylim([0, 1]);
+
+barPlot.FaceColor = 'flat';
+barPlot.CData(1,:) = colors(1, :);
+barPlot.CData(2,:) = colors(2, :);
+barPlot.CData(3,:) = colors(3, :);
+
+%% Helper functions
 function plotPrior(para, logSpace, transform, style)
 c0 = para(1); c1 = para(2); c2 = para(3);
 

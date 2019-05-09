@@ -20,6 +20,13 @@ else
 end
 
 if(isempty(mean) || isempty(std))
+    warning('Empty estimate.')
+    mean = vProb;
+    std  = Inf;
+end
+
+if(isnan(mean) || isnan(std))
+    warning('NaN estimate.')
     mean = vProb;
     std  = Inf;
 end
