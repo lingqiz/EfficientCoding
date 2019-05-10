@@ -30,7 +30,6 @@ prior = @(support) gampdf(abs(support), paraSub(1), paraSub(2)) * 0.5;
 plotPsycurve(combinedSubject, prior, noiseLevel, weibullFitCombined, 'Combined Subject:')
 
 %% Log Linear Prior
-load('./CombinedFit/combinedWeibull.mat');
 load('./CombinedFit/combinedLogLinear.mat');
 
 nPoint = 20;
@@ -48,6 +47,14 @@ nrmConst = 1.0 / trapz(domain, logLinearPrior(domain));
 
 prior = @(support)  logLinearPrior(support) * nrmConst * 0.5;
 plotPsycurve(combinedSubject, prior, paraSub(length(refPoint) + 1 : end), weibullFitCombined, 'Combined Subject:')
+
+%% Gaussian Prior
+load('./CombinedFit/combinedGaussUni.mat');
+
+noiseLevel = paraSub(2:end);
+prior = @(support) 0.9 * normpdf(abs(support), 0, paraSub(1)) + 0.002 ;
+
+plotPsycurve(combinedSubject, prior, paraSub(2 : end), weibullFitCombined, 'Combined Subject:')
 
 %% Helper function
 function plotPsycurve(subData, prior, noiseLevel, weibullPara, titleText)
