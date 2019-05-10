@@ -72,7 +72,7 @@ barPlot.CData(2,:) = colors(2, :);
 barPlot.CData(3,:) = colors(3, :);
 barPlot.CData(4,:) = colors(4, :);
 
-%% Compare different fits
+%% Compare different prior 
 figure; hold on; grid on;
 
 load('./CombinedFit/combinedGauss.mat');
@@ -106,7 +106,7 @@ prior = @(support)  logLinearPrior(support) * nrmConst * 0.5;
 plotPrior(prior, true, false, '-');
 
 load('./CombinedFit/combinedGaussUni.mat');
-prior = @(support) (0.9 * normpdf(abs(support), 0, paraSub(1)) + 0.002) * 0.5;
+prior = @(support) (0.9 * normpdf(abs(support), 0, paraSub(1)) + 0.002);
 plotPrior(prior, true, false, '-');
 
 plotPriorWrapper([1, 1, 0.3], true, false, '--');
@@ -131,7 +131,7 @@ UB = 40; priorSupport = (0.1 : 0.001 : UB);
 if logSpace
     plot(log(priorSupport), log(prior(priorSupport)), style, 'LineWidth', 2);
     
-    labelPos = [0.25, 0.5, 1, 2.1 : 2 : 12.1, 20];
+    labelPos = [0.25, 0.5, 1, 2.1 : 4 : 14.1, 20, 40];
     xticks(log(labelPos));
     xticklabels(arrayfun(@num2str, labelPos, 'UniformOutput', false));
     
