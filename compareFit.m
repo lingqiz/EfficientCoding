@@ -151,7 +151,7 @@ else
     xlim([0.01, UB]);
 end
 
-ylim([-7, -1]);
+ylim([-7, -0.5]);
 title('Prior Distribution');
 xlabel('V'); ylabel('P(V)');
 
