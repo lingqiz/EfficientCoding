@@ -50,7 +50,8 @@ WeibullLL = LL;
 nTrial = [5760, 5760, 960, 5760, 6240];
 llLB = sum(nTrial) * -log(0.5);
 
-load('./CombinedFit/combinedGauss.mat');
+% load('./CombinedFit/combinedGauss.mat');
+load('./CombinedFit/combinedMapping.mat');
 normalizedPwr = (llLB - fval) / (llLB - WeibullLL);
 
 load('./CombinedFit/combinedGamma.mat');
@@ -62,31 +63,33 @@ normalizedLoglinear = (llLB - fval) / (llLB - WeibullLL);
 load('./CombinedFit/combinedGaussUni.mat');
 normalizedGauss = (llLB - fval) / (llLB - WeibullLL);
 
-labels = categorical({'Power Law','Gamma','Gaussian', 'Log Linear'});
-barPlot = bar(labels, [normalizedPwr; normalizedGamma; normalizedGauss; normalizedLoglinear]);
-ylim([0, 1]);
+labels = categorical({'1 Power Law','2 Gamma','4 Gaussian', '3 Piecewise Log Linear'});
+barPlot = bar(labels, [normalizedPwr; normalizedGamma; normalizedGauss; normalizedLoglinear], 0.25);
+xlabel('Combined Subject'); ylim([0, 1]);
+ylabel('Normalized Log Likelihood');
 
-barPlot.FaceColor = 'flat';
-barPlot.CData(1,:) = colors(1, :);
-barPlot.CData(2,:) = colors(2, :);
-barPlot.CData(3,:) = colors(3, :);
-barPlot.CData(4,:) = colors(4, :);
+title('Effect of the Parametric Family of Prior')
+grid on; barPlot.FaceColor = 'flat';
+barPlot.CData(1,:) = ones(1, 3) * 0.0;
+barPlot.CData(2,:) = ones(1, 3) * 0.3;
+barPlot.CData(3,:) = ones(1, 3) * 0.6;
+barPlot.CData(4,:) = ones(1, 3) * 0.9;
 
 %% Compare different prior 
-figure; hold on; grid on;
+figure('DefaultAxesFontSize', 16); hold on; grid on;
 
-load('./CombinedFit/combinedGauss.mat');
+load('./CombinedFit/combinedMapping.mat');
 c0 = paraSub(1); c1 = paraSub(2); c2 = paraSub(3);
 domain    = -100 : 0.01 : 100;
 priorUnm  = 1.0 ./ ((abs(domain) .^ c0) + c1) + c2;
 nrmConst  = 1.0 ./ (trapz(domain, priorUnm));
 prior = @(support) (1.0 ./ ((abs(support) .^ c0) + c1) + c2) * nrmConst;
-plotPrior(prior, true, false, '-');
+plotPrior(prior, true, false, '-', ones(1, 3) * 0.0);
 
 load('./CombinedFit/combinedGamma.mat');
 noiseLevel = paraSub(3:end);
 prior = @(support) gampdf(abs(support), paraSub(1), paraSub(2)) * 0.5;
-plotPrior(prior, true, false, '-');
+plotPrior(prior, true, false, '-', ones(1, 3) * 0.3);
 
 load('./CombinedFit/combinedLogLinear.mat');
 nPoint = 20;
@@ -103,14 +106,15 @@ domain = 0.1 : 0.01 : 100;
 nrmConst = 1.0 / trapz(domain, logLinearPrior(domain));
 
 prior = @(support)  logLinearPrior(support) * nrmConst * 0.5;
-plotPrior(prior, true, false, '-');
+plotPrior(prior, true, false, '-', ones(1, 3) * 0.6);
 
 load('./CombinedFit/combinedGaussUni.mat');
 prior = @(support) (0.9 * normpdf(abs(support), 0, paraSub(1)) + 0.002);
-plotPrior(prior, true, false, '-');
+plotPrior(prior, true, false, '-', ones(1, 3) * 0.9);
 
 plotPriorWrapper([1, 1, 0.3], true, false, '--');
 legend({'Power Law', 'Gamma', 'Log Linear', 'Gaussian', 'Neural Prior'});
+title('Prior Across Parameterization')
 
 %% Helper functions
 function plotPriorWrapper(para, logSpace, transform, style)
@@ -121,17 +125,17 @@ priorUnm  = 1.0 ./ (c1 * (abs(domain) .^ c0) + c2);
 nrmConst  = 1.0 / (trapz(domain, priorUnm));
 prior = @(support) (1 ./ (c1 * (abs(support) .^ c0) + c2)) * nrmConst;
 
-plotPrior(prior, logSpace, transform, style)
+plotPrior(prior, logSpace, transform, style, ones(1, 3) * 0.0)
 end
 
 
-function plotPrior(prior, logSpace, transform, style)
+function plotPrior(prior, logSpace, transform, style, lineColor)
 % Shape of Prior
 UB = 40; priorSupport = (0.1 : 0.001 : UB);
 if logSpace
-    plot(log(priorSupport), log(prior(priorSupport)), style, 'LineWidth', 2);
+    plot(log(priorSupport), log(prior(priorSupport)), style, 'LineWidth', 2, 'Color', lineColor);
     
-    labelPos = [0.25, 0.5, 1, 2.1 : 4 : 14.1, 20, 40];
+    labelPos = [0.1, 0.25, 0.5, 1, 2, 4, 8, 20, 40];
     xticks(log(labelPos));
     xticklabels(arrayfun(@num2str, labelPos, 'UniformOutput', false));
     
@@ -143,7 +147,7 @@ else
     if transform
         priorProb = cumtrapz(priorSupport, priorProb);
     end
-    plot((priorSupport), (priorProb), style, 'LineWidth', 2);
+    plot((priorSupport), (priorProb), style, 'LineWidth', 2, 'Color', lineColor);
     xlim([0.01, UB]);
 end
 
