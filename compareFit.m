@@ -10,43 +10,48 @@ allPara = [paraSub1; paraSub2; paraSub3; paraSub4; paraSub5];
 
 for i = 1 : nSub
     para = allPara(i, :);
-    plotPrior(para, true, false, '-');
+    l1 = plotPrior(para, true, false, '-', ones(1, 3) * 0.8);
 end
 
-load('combinedMapping.mat');
-plotPrior(paraSub, true, false, '-');
+load('CombinedFit/combinedMapping.mat');
+load('CombinedFit/combinedWeibull.mat');
+l2 = plotPrior(paraSub, true, false, '-', ones(1, 3) * 0.1);
 
-plotPrior([1, 0.33, 0], true, false, '--');
-legend('Sub1', 'Sub2', 'Sub3', 'Sub4', 'Sub5', 'Combined', 'Reference');
+l3 = plotPrior([1, 0.33, 0], true, false, '--', ones(1, 3) * 0.1);
+legend([l1, l2, l3], {'Individual Subject', 'Combined', 'Neural Prior'});
 
 nTrial = [5760, 5760, 960, 5760, 6240];
+nTrial = [nTrial, sum(nTrial)];
 llLB = -log(0.5) * nTrial;
 
-BayesianLL = [fval1, fval2, fval3, fval4, fval5];
-WeibullLL  = [LL1, LL2, LL3, LL4, LL5];
-original  = [0.9, 0.85, 0.92, 0.82, 0.9];
+BayesianLL = [fval1, fval2, fval3, fval4, fval5, fval];
+WeibullLL  = [LL1, LL2, LL3, LL4, LL5, LL];
+original  = [0.9, 0.85, 0.92, 0.82, 0.9, Inf];
 
-figure; grid on;
+figure; grid on; 
 normalizedLL = (llLB - BayesianLL) ./ (llLB - WeibullLL);
 
 load('./MappingFit/new_para_map_fit/fixed_prior_01.mat');
-fixedPriorLL = [fval1, fval2, fval3, fval4, fval5];
+fixedPriorLL = [fval1, fval2, fval3, fval4, fval5, Inf];
 nrmFixedPriorLL = (llLB - fixedPriorLL) ./ (llLB - WeibullLL);
 
 barPlot = bar([nrmFixedPriorLL; normalizedLL; original]');
 legend('Neural Prior', 'Efficient Coding', 'NN2006');
 
-barPlot(1).FaceColor = colors(1, :);
-barPlot(2).FaceColor = colors(2, :);
-barPlot(3).FaceColor = colors(5, :);
+barPlot(1).FaceColor = ones(1, 3) * 0.4;
+barPlot(2).FaceColor = ones(1, 3) * 0.0;
+barPlot(3).FaceColor = ones(1, 3) * 0.8;
 
 yticks(0 : 0.2 : 1); grid on;
 yticklabels(arrayfun(@num2str, 0 : 0.2 : 1, 'UniformOutput', false));    
 
 title('Normalized Log Likelihood');
-xlabel('Subject'); ylabel('Normalized Log Probability');
+xlabel('Subject'); ylabel('Normalized Log Likelihood');
+name = {'1';'2';'3';'4';'5'; 'Combined'};
+set(gca,'xticklabel',name);
+set(gca, 'FontSize', 14)
 
-function plotPrior(para, logSpace, transform, style)
+function line = plotPrior(para, logSpace, transform, style, lineColor)
 c0 = para(1); c1 = para(2); c2 = para(3);
 
 domain    = -100 : 0.01 : 100;
@@ -57,7 +62,7 @@ prior = @(support) (1.0 ./ ((abs(support) .^ c0) + c1) + c2) * nrmConst;
 
 UB = 40; priorSupport = (0.1 : 0.001 : UB);
 if logSpace
-    plot(log(priorSupport), log(prior(priorSupport)), style, 'LineWidth', 2);
+    line = plot(log(priorSupport), log(prior(priorSupport)), style, 'LineWidth', 2, 'Color', lineColor);
     
     labelPos = [0.1, 0.25, 0.5, 1, 2.0, 4.0, 8.0, 20, 40];
     xticks(log(labelPos)); 
@@ -71,7 +76,7 @@ else
     if transform  
     	priorProb = cumtrapz(priorSupport, priorProb);     
     end
-    plot((priorSupport), (priorProb), style, 'LineWidth', 2);
+    line = plot((priorSupport), (priorProb), style, 'LineWidth', 2, 'Color', lineColor);
     xlim([0.01, UB]);
 end
 
