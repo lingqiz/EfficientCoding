@@ -2,7 +2,7 @@ load('./MappingFit/new_para_map_fit/new_para_Feb9.mat');
 load('./weibullFitAll.mat');
 
 figure; hold on; grid on;
-set(gca, 'FontSize', 14)
+set(gca, 'FontSize', 14);
 colors = get(gca,'colororder');
 
 nSub = 5;
