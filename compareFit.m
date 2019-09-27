@@ -1,3 +1,5 @@
+%% Figure 1 - Piror
+
 load('./MappingFit/new_para_map_fit/new_para_Feb9.mat');
 load('./weibullFitAll.mat');
 
@@ -20,6 +22,30 @@ l2 = plotPrior(paraSub, true, false, '-', ones(1, 3) * 0.1);
 l3 = plotPrior([1, 0.33, 0], true, false, '--', ones(1, 3) * 0.1);
 legend([l1, l2, l3], {'Individual Subject', 'Combined', 'Neural Prior'});
 
+priorXlim = xlim();
+
+%% Distribution of Data
+dataDir = './NN2006/';
+load(strcat(dataDir, 'SUB1.mat')); load(strcat(dataDir, 'SUB2.mat'));
+load(strcat(dataDir, 'SUB3.mat')); load(strcat(dataDir, 'SUB4.mat')); load(strcat(dataDir, 'SUB5.mat'));
+
+figure();
+combined = [subject1, subject2, subject3, subject4, subject5];
+hist = histogram(log(abs(combined(3, :))), 50, 'Normalization', 'probability');
+hist.FaceColor = [0.5, 0.5, 0.5];
+box off;
+
+xlim(priorXlim);
+labelPos = [0.1, 0.25, 0.5, 1, 2.0, 4.0, 8.0, 20, 40];
+xticks(log(labelPos));
+xticklabels(arrayfun(@num2str, labelPos, 'UniformOutput', false));
+
+figure();
+hist = histogram(abs(combined(3, :)), 50, 'Normalization', 'probability');
+hist.FaceColor = [0.5, 0.5, 0.5];
+box off;
+
+%% Figure 2 - likelihood
 nTrial = [5760, 5760, 960, 5760, 6240];
 nTrial = [nTrial, sum(nTrial)];
 llLB = -log(0.5) * nTrial;
@@ -28,7 +54,7 @@ BayesianLL = [fval1, fval2, fval3, fval4, fval5, fval];
 WeibullLL  = [LL1, LL2, LL3, LL4, LL5, LL];
 original  = [0.9, 0.85, 0.92, 0.82, 0.9, Inf];
 
-figure; grid on; 
+figure; grid on;
 normalizedLL = (llLB - BayesianLL) ./ (llLB - WeibullLL);
 
 load('./MappingFit/new_para_map_fit/fixed_prior_01.mat');
@@ -43,7 +69,7 @@ barPlot(2).FaceColor = ones(1, 3) * 0.0;
 barPlot(3).FaceColor = ones(1, 3) * 0.8;
 
 yticks(0 : 0.2 : 1); grid on;
-yticklabels(arrayfun(@num2str, 0 : 0.2 : 1, 'UniformOutput', false));    
+yticklabels(arrayfun(@num2str, 0 : 0.2 : 1, 'UniformOutput', false));
 
 title('Normalized Log Likelihood');
 xlabel('Subject'); ylabel('Normalized Log Likelihood');
@@ -65,16 +91,16 @@ if logSpace
     line = plot(log(priorSupport), log(prior(priorSupport)), style, 'LineWidth', 2, 'Color', lineColor);
     
     labelPos = [0.1, 0.25, 0.5, 1, 2.0, 4.0, 8.0, 20, 40];
-    xticks(log(labelPos)); 
+    xticks(log(labelPos));
     xticklabels(arrayfun(@num2str, labelPos, 'UniformOutput', false));
     
     probPos = 0.01 : 0.05 : 0.3;
-    yticks(log(probPos)); 
+    yticks(log(probPos));
     yticklabels(arrayfun(@num2str, probPos, 'UniformOutput', false));
 else
     priorProb = prior(priorSupport);
-    if transform  
-    	priorProb = cumtrapz(priorSupport, priorProb);     
+    if transform
+        priorProb = cumtrapz(priorSupport, priorProb);
     end
     line = plot((priorSupport), (priorProb), style, 'LineWidth', 2, 'Color', lineColor);
     xlim([0.01, UB]);
