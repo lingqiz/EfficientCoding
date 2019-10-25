@@ -21,10 +21,11 @@ end
 
 if relative
     line = errorbar(log(vProb), exp(allEstimate(1, :)) ./ vProb, ...
-        (exp(allEstimate(1, :))-exp(allEstimate(3, :))) ./ vProb, (exp(allEstimate(2, :))-exp(allEstimate(1, :))) ./ vProb, '--o', 'Color', color);
+        (exp(allEstimate(1, :))-exp(allEstimate(3, :))) ./ vProb, (exp(allEstimate(2, :))-exp(allEstimate(1, :))) ./ vProb, ...
+        '--o', 'Color', color, 'LineWidth', 1.5);
 else
     line = errorbar(log(vProb), allEstimate(1, :), ...
-        allEstimate(1, :)-allEstimate(3, :), allEstimate(2, :)-allEstimate(1, :), '--o', 'Color', color);
+        allEstimate(1, :)-allEstimate(3, :), allEstimate(2, :)-allEstimate(1, :), '--o', 'Color', color, 'LineWidth', 1.5);
 end
 
 end
