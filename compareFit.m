@@ -3,7 +3,7 @@
 load('./MappingFit/new_para_map_fit/new_para_Feb9.mat');
 load('./weibullFitAll.mat');
 
-figure; hold on; grid on;
+figure; hold on;
 set(gca, 'FontSize', 14);
 colors = get(gca,'colororder');
 
@@ -23,6 +23,7 @@ l3 = plotPrior([1, 0.33, 0], true, false, '--', ones(1, 3) * 0.1);
 legend([l1, l2, l3], {'Individual Subject', 'Combined', 'Neural Prior'});
 
 priorXlim = xlim();
+set(gcf,'Position',[0, 0, 600, 500]);
 
 %% Distribution of Data
 dataDir = './NN2006/';
