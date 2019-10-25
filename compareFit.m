@@ -76,7 +76,7 @@ barPlot.CData(3,:) = ones(1, 3) * 0.6;
 barPlot.CData(4,:) = ones(1, 3) * 0.9;
 
 %% Compare different prior 
-figure('DefaultAxesFontSize', 14); hold on; grid on;
+figure('DefaultAxesFontSize', 14); hold on;
 
 load('./CombinedFit/combinedMapping.mat');
 c0 = paraSub(1); c1 = paraSub(2); c2 = paraSub(3);
