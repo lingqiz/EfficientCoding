@@ -82,7 +82,7 @@ if relative
     ylabel('Weber Fraction');
 elseif logSpace
     yticklabels(arrayfun(@(x)num2str(x, '%.2f'), exp(yticks), 'UniformOutput', false));
-    ylabel('Threshold');    
+    ylabel('Threshold');
 else
     ylim([0, 4]);
     ylabel('Threshold');
@@ -91,13 +91,13 @@ end
 if (~logSpace) && (~relative)
     xlabel('Speed V [deg/sec]');
     xticks(vProb);
-    xticklabels(arrayfun(@num2str, vProb, 'UniformOutput', false));    
+    xticklabels(arrayfun(@num2str, vProb, 'UniformOutput', false));
     legend([t1, t2], {'0.075', '0.5'});
     title(sprintf('Subject %d Threshold', subjectIdx));
 else
     xlabel('Speed V [deg/sec]');
-    xticks(log(vProb));    
+    xticks(log(vProb));
     xticklabels(arrayfun(@num2str, vProb, 'UniformOutput', false));
     legend([t1, t2], {'0.075', '0.5'});
-    title(sprintf('Subject %d Threshold', subjectIdx));
+    title(sprintf('Subject %d Threshold', subjectIdx));    
 end
