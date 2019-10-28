@@ -89,7 +89,7 @@ plotPrior(prior, true, false, '-', ones(1, 3) * 0.0);
 load('./CombinedFit/combinedGamma.mat');
 noiseLevel = paraSub(3:end);
 prior = @(support) gampdf(abs(support), paraSub(1), paraSub(2)) * 0.5;
-plotPrior(prior, true, false, '-', ones(1, 3) * 0.3);
+plotPrior(prior, true, false, '-', ones(1, 3) * 0.5);
 
 load('./CombinedFit/combinedLogLinear.mat');
 nPoint = 20;
@@ -106,7 +106,7 @@ domain = 0.1 : 0.01 : 100;
 nrmConst = 1.0 / trapz(domain, logLinearPrior(domain));
 
 prior = @(support)  logLinearPrior(support) * nrmConst * 0.5;
-plotPrior(prior, true, false, '-', ones(1, 3) * 0.6);
+plotPrior(prior, true, false, '-', ones(1, 3) * 0.75);
 
 load('./CombinedFit/combinedGaussUni.mat');
 prior = @(support) (0.9 * normpdf(abs(support), 0, paraSub(1)) + 0.002);
