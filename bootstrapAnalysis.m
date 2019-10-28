@@ -71,22 +71,33 @@ figure; hold on;
 colormap = cbrewer('seq', 'Greys', 9);
 colors = colormap([5, 9], :);
 
-relative = false; sd = false;
-t1 = plotWeibullThres(thLC_data, allthLC, colors(1, :), relative, sd);
-plotThresBayes(prior, noiseLevel, 0.075, colors(1, :),  relative);
-t2 = plotWeibullThres(thHC_data, allthHC, colors(2, :), relative, sd);
-plotThresBayes(prior, noiseLevel, 0.5, colors(2, :),    relative);
+relative = false; sd = false; logSpace = true;
+t1 = plotWeibullThres(thLC_data, allthLC, colors(1, :), relative, sd, logSpace);
+plotThresBayes(prior, noiseLevel, 0.075, colors(1, :),  relative, logSpace);
+t2 = plotWeibullThres(thHC_data, allthHC, colors(2, :), relative, sd, logSpace);
+plotThresBayes(prior, noiseLevel, 0.5, colors(2, :),    relative, logSpace);
 
 if relative
     yticklabels(arrayfun(@(x)num2str(x, '%.2f'), yticks, 'UniformOutput', false));
     ylabel('Weber Fraction');
-else
+elseif logSpace
     yticklabels(arrayfun(@(x)num2str(x, '%.2f'), exp(yticks), 'UniformOutput', false));
+    ylabel('Threshold');    
+else
+    ylim([0, 4]);
     ylabel('Threshold');
 end
 
-xlabel('Speed V [deg/sec]');
-xticks(log(vProb));
-xticklabels(arrayfun(@num2str, vProb, 'UniformOutput', false));
-legend([t1, t2], {'0.075', '0.5'});
-title(sprintf('Subject %d Threshold', subjectIdx));
+if (~logSpace) && (~relative)
+    xlabel('Speed V [deg/sec]');
+    xticks(vProb);
+    xticklabels(arrayfun(@num2str, vProb, 'UniformOutput', false));    
+    legend([t1, t2], {'0.075', '0.5'});
+    title(sprintf('Subject %d Threshold', subjectIdx));
+else
+    xlabel('Speed V [deg/sec]');
+    xticks(log(vProb));    
+    xticklabels(arrayfun(@num2str, vProb, 'UniformOutput', false));
+    legend([t1, t2], {'0.075', '0.5'});
+    title(sprintf('Subject %d Threshold', subjectIdx));
+end
