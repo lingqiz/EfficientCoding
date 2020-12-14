@@ -44,17 +44,15 @@ prior = @(support) (1.0 ./ ((abs(support) .^ c0) + c1) + c2) * nrmConst;
 
 figure; hold on;
 addpath('./cbrewer/');
-colormap = cbrewer('seq', 'YlOrRd', 9);
+colormap = cbrewer('seq', 'Greys', 9);
 colors = colormap([9, 7, 6, 5, 3], :);
-
-% colors = get(gca,'colororder');
 
 plotBiasBayes(prior, noiseLevel, 0.075, colors);
 plotWeibullLine(biasLC_data, allBiasLC, nBootstrap, colors);
 xlabel('Speed V [deg/sec]'); ylabel('Matching Speed: $\frac{V_{1}}{V_{0}}$', 'Interpreter', 'latex');
 xticks(log(vRef)); xticklabels(arrayfun(@num2str, vRef, 'UniformOutput', false));
 title(sprintf('Subject %d Matching Speed - Low Contrast', subjectIdx));
-ylim([0, 2]);
+ylim([0.2, 1.6]);
 
 figure; hold on;
 plotBiasBayes(prior, noiseLevel, 0.5, colors);
@@ -62,7 +60,7 @@ plotWeibullLine(biasHC_data, allBiasHC, nBootstrap, colors);
 xlabel('Speed V [deg/sec]'); ylabel('Matching Speed: $\frac{V_{1}}{V_{0}}$', 'Interpreter', 'latex');
 xticks(log(vRef)); xticklabels(arrayfun(@num2str, vRef, 'UniformOutput', false));
 title(sprintf('Subject %d Matching Speed - High Contrast', subjectIdx));
-% ylim([0, 5]);
+ylim([0.6, 2.2]);
 
 %% Threshold
 figure; hold on;
