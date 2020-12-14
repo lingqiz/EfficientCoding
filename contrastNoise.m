@@ -50,6 +50,28 @@ title('Subject 5');
 
 suptitle('Contrast-dependent Noise');
 
+%%
+colormap = cbrewer('seq', 'Blues', 9);
+colors = colormap([9, 7, 1, 5, 3], :);
+
+l1 = plot(log(crst), paraSub1(4:end), 'o', 'LineWidth', 1.2, 'Color', colors(1, :)); 
+hold on; grid on;
+noise_sub1 = plot_fit(crst, paraSub1, colors(1, :), [1e4, 100, rand(1, 2)]);
+
+l2 = plot(log(crst), paraSub2(4:end), 'o', 'LineWidth', 1.2, 'Color', colors(2, :));
+hold on; grid on;
+noise_sub2 = plot_fit(crst, paraSub2, colors(2, :), [1e4, 100, rand(1, 2)]);
+
+l4 = plot(log(crst), paraSub4(4:end), 'o', 'LineWidth', 1.2, 'Color', colors(4, :));
+hold on; grid on;
+noise_sub4 = plot_fit(crst, paraSub4, colors(4, :), [1e4, 100, rand(1, 2)]);
+
+l5 = plot(log(crst), paraSub5(4:end), 'o', 'LineWidth', 1.2, 'Color', colors(5, :));
+hold on; grid on;
+noise_sub5 = plot_fit(crst, paraSub5, colors(5, :), [1e4, 100, rand(1, 2)]);
+% pbaspect([2.1 1 1]);
+box off; grid off;
+
 %% Gaussian fit
 % load('GaussFitFinal/gauss_final.mat');
 % subplot(1, 2, 2);  hold on; grid on;
