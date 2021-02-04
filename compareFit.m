@@ -1,3 +1,13 @@
+%% Figure format
+try 
+    plotlabOBJ = plotlab();
+    plotlabOBJ.applyRecipe(...
+        'figureWidthInches', 15, ...
+        'figureHeightInches', 15);
+catch EXP
+    fprintf('plotlab not available, use default MATLAB style \n');
+end
+
 %% Compare fit for individual subject
 load('./AllFitRes/BayesianFitAll1.mat');
 load('./AllFitRes/weibullFitAll.mat');
