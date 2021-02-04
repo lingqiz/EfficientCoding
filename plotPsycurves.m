@@ -1,4 +1,14 @@
-% Load Dataset, Initialization, Start Fitting Procedure
+%% Figure format
+try 
+    plotlabOBJ = plotlab();
+    plotlabOBJ.applyRecipe(...
+        'figureWidthInches', 24, ...
+        'figureHeightInches', 12);
+catch EXP
+    fprintf('plotlab not available, use default MATLAB style \n');
+end
+
+%% Load Dataset, Initialization, Start Fitting Procedure
 dataDir = './NN2006/';
 load(strcat(dataDir, 'SUB1.mat'));
 load(strcat(dataDir, 'SUB2.mat'));
@@ -10,6 +20,8 @@ load('./weibullFitAll.mat');
 load('./GaussFit/gauss_final_2.mat');
 
 plotPsycurve(subject1, paraSub1, weibullFit1, 'Subject 1:');
+
+%% Helper function
 function plotPsycurve(subData, modelPara, weibullPara, titleText)
 
 cRef  = 0.075;
@@ -40,7 +52,7 @@ nrmConst  = 1.0 / (trapz(domain, priorUnm));
 prior = @(support) (1.0 ./ ((abs(support) .^ c0) + c1) + c2) * nrmConst;
 
 index = reshape(1 : 36, 6, 6)';
-figure('Renderer', 'painters', 'Position', [10 10 1024 768]);
+figure();
 
 for i = 1 : length(cTest)
     for j = 1 : length(refV)
@@ -94,6 +106,6 @@ for i = 1 : length(cTest)
         
     end
 end
-suptitle(titleText);
+% suptitle(titleText);
 end
 

@@ -1,4 +1,15 @@
+%% Figure format
+try 
+    plotlabOBJ = plotlab();
+    plotlabOBJ.applyRecipe(...
+        'figureWidthInches', 20, ...
+        'figureHeightInches', 10);
+catch EXP
+    fprintf('plotlab not available, use default MATLAB style \n');
+end
+
 %% Mapping fit
+addpath('./cbrewer/');
 load('MappingFit/new_para_map_fit/new_para_Feb9.mat');
 
 crst = [0.05, 0.075, 0.1, 0.2, 0.4, 0.5, 0.8];
@@ -48,29 +59,58 @@ noise_sub5 = plot_fit(crst, paraSub5, colors(5, :), [1e4, 100, rand(1, 2)]);
 pbaspect([2.1 1 1]);
 title('Subject 5');
 
-suptitle('Contrast-dependent Noise');
+sgtitle('Contrast-dependent Noise');
 
 %%
-colormap = cbrewer('seq', 'Blues', 9);
-colors = colormap([9, 7, 1, 5, 3], :);
+figure();
+subplot(1, 2, 1);
+colormap = cbrewer('div', 'Spectral', 9);
+colors = colormap([1, 2, 3, 8], :);
 
-l1 = plot(log(crst), paraSub1(4:end), 'o', 'LineWidth', 1.2, 'Color', colors(1, :)); 
+l1 = plot(log(crst), paraSub1(4:end), 'o', 'LineWidth', 1, 'MarkerEdgeColor', colors(1, :), 'MarkerFaceColor', colors(1, :)); 
 hold on; grid on;
 noise_sub1 = plot_fit(crst, paraSub1, colors(1, :), [1e4, 100, rand(1, 2)]);
 
-l2 = plot(log(crst), paraSub2(4:end), 'o', 'LineWidth', 1.2, 'Color', colors(2, :));
+l2 = plot(log(crst), paraSub2(4:end), 'o', 'LineWidth', 1, 'MarkerEdgeColor', colors(2, :), 'MarkerFaceColor', colors(2, :));
 hold on; grid on;
 noise_sub2 = plot_fit(crst, paraSub2, colors(2, :), [1e4, 100, rand(1, 2)]);
 
-l4 = plot(log(crst), paraSub4(4:end), 'o', 'LineWidth', 1.2, 'Color', colors(4, :));
+l4 = plot(log(crst), paraSub4(4:end), 'o', 'LineWidth', 1, 'MarkerEdgeColor', colors(3, :), 'MarkerFaceColor', colors(3, :));
 hold on; grid on;
-noise_sub4 = plot_fit(crst, paraSub4, colors(4, :), [1e4, 100, rand(1, 2)]);
+noise_sub4 = plot_fit(crst, paraSub4, colors(3, :), [1e4, 100, rand(1, 2)]);
 
-l5 = plot(log(crst), paraSub5(4:end), 'o', 'LineWidth', 1.2, 'Color', colors(5, :));
+l5 = plot(log(crst), paraSub5(4:end), 'o', 'LineWidth', 1, 'MarkerEdgeColor', colors(4, :), 'MarkerFaceColor', colors(4, :));
 hold on; grid on;
-noise_sub5 = plot_fit(crst, paraSub5, colors(5, :), [1e4, 100, rand(1, 2)]);
-% pbaspect([2.1 1 1]);
+noise_sub5 = plot_fit(crst, paraSub5, colors(4, :), [1e4, 100, rand(1, 2)]);
+
 box off; grid off;
+xlabel('Contrast');
+ylabel('Noise SD');
+
+%% 
+subplot(1, 2, 2);
+colormap = cbrewer('div', 'Spectral', 9);
+colors = colormap([1, 2, 3, 8], :);
+
+l1 = plot(log(crst), 1 ./ paraSub1(4:end), 'o', 'LineWidth', 1, 'MarkerEdgeColor', colors(1, :), 'MarkerFaceColor', colors(1, :)); 
+hold on; grid on;
+noise_sub1 = plot_fit_(crst, 1 ./ paraSub1, colors(1, :), [1e4, 100, rand(1, 2)]);
+
+l2 = plot(log(crst), 1 ./ paraSub2(4:end), 'o', 'LineWidth', 1, 'MarkerEdgeColor', colors(2, :), 'MarkerFaceColor', colors(2, :));
+hold on; grid on;
+noise_sub2 = plot_fit_(crst, 1 ./ paraSub2, colors(2, :), [1e4, 100, rand(1, 2)]);
+
+l4 = plot(log(crst), 1 ./ paraSub4(4:end), 'o', 'LineWidth', 1, 'MarkerEdgeColor', colors(3, :), 'MarkerFaceColor', colors(3, :));
+hold on; grid on;
+noise_sub4 = plot_fit_(crst, 1 ./ paraSub4, colors(3, :), [1e4, 100, rand(1, 2)]);
+
+l5 = plot(log(crst), 1 ./ paraSub5(4:end), 'o', 'LineWidth', 1, 'MarkerEdgeColor', colors(4, :), 'MarkerFaceColor', colors(4, :));
+hold on; grid on;
+noise_sub5 = plot_fit_(crst, 1 ./ paraSub5, colors(4, :), [1e4, 100, rand(1, 2)]);
+
+box off; grid off;
+xlabel('Contrast');
+ylabel('1 / Noise SD');
 
 %% Gaussian fit
 % load('GaussFitFinal/gauss_final.mat');
@@ -86,6 +126,7 @@ box off; grid off;
 % ylim([0 0.1]);
 % title('Gaussian Approximation');
 
+%%
 function loss = combined_loss(combined_data, combined_para)
     crst = [0.05, 0.075, 0.1, 0.2, 0.4, 0.5, 0.8];
     rmax = combined_para(1); rbase = combined_para(2);
@@ -102,13 +143,13 @@ function fit = plot_fit(crst, paraSub, color, init)
     fit = fit_para(crst, paraSub(4:end), init);
     crstRange = 0.04 : 0.01 : 1;
         
-    plot(log(crstRange), hc(crstRange, fit), 'k', 'LineWidth', 1.2, 'Color', color);
-    legend({sprintf('q: %.2f \nc50: %.2f', fit(3), fit(4))});
+    plot(log(crstRange), hc(crstRange, fit), 'k', 'LineWidth', 2.0, 'Color', color);
+%     legend({sprintf('q: %.2f \nc50: %.2f', fit(3), fit(4))});
 
     xticks(log(crst)); 
     xticklabels(arrayfun(@num2str, crst, 'UniformOutput', false));
     xlim(log([0.04, 1]));
-    ylim([0, 0.08]);
+%     ylim([0, 100]);
 end
 
 
@@ -121,7 +162,7 @@ function fit = fit_para(crst, noise, init)
     problem.objective = @(para) sum((hc(crst, para) - noise) .^ 2);
     problem.x0 = init;
     problem.lb = [-1e3, -1e3, 0, 0];
-    problem.ub = [1e6, 1e6, 100, 1];
+    problem.ub = [1e6, 1e6, 10, 1];
     
     fit = fmincon(problem);
 end
@@ -156,4 +197,42 @@ paraSub(4:end) = baseStd;
 plot(crst, baseStd, '--o', 'LineWidth', 1.2)
 % plot(log(crst), baseStd, '--o', 'LineWidth', 1.2)
 
+end
+
+%%
+function fit = plot_fit_(crst, paraSub, color, init)    
+    fit = fit_para_(crst, paraSub(4:end), init);
+    crstRange = 0.04 : 0.01 : 1;
+        
+    plot(log(crstRange), hc_(crstRange, fit), 'k', 'LineWidth', 2.0, 'Color', color);
+%     legend({sprintf('q: %.2f \nc50: %.2f', fit(3), fit(4))});
+
+    xticks(log(crst)); 
+    xticklabels(arrayfun(@num2str, crst, 'UniformOutput', false));
+    xlim(log([0.04, 1]));
+    ylim([0, 100]);
+end
+
+function fit = fit_para_(crst, noise, init)    
+    options = optimoptions('fmincon','Display','off', ...
+        'OptimalityTolerance', 1e-10, 'StepTolerance', 1e-10, 'MaxFunctionEvaluations', 1e5);
+    
+    problem.options = options;
+    problem.solver = 'fmincon';
+    problem.objective = @(para) sum((hc_(crst, para) - noise) .^ 2);
+    problem.x0 = init;
+    problem.lb = [-1e3, -1e3, 0, 0];
+    problem.ub = [1e6, 1e6, 10, 1];
+    
+    fit = fmincon(problem);
+end
+
+% TODO: compare fisher information?
+% TODO: lookup r_max, r_base, q and c_50 from neural data 
+% and compare to our fits
+function rate = hc_(c, para)
+    rmax = para(1); rbase = para(2); 
+    q = para(3); c50 = para(4);
+    
+    rate  = rmax * (c .^ q) ./ (c .^ q + c50 .^ q) + rbase;    
 end
