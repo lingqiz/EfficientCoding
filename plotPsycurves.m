@@ -1,9 +1,9 @@
 %% Figure format
-try 
+try
     plotlabOBJ = plotlab();
     plotlabOBJ.applyRecipe(...
-        'figureWidthInches', 24, ...
-        'figureHeightInches', 12);
+        'figureWidthInches', 32, ...
+        'figureHeightInches', 16);
 catch EXP
     fprintf('plotlab not available, use default MATLAB style \n');
 end
@@ -20,6 +20,13 @@ load('./weibullFitAll.mat');
 load('./GaussFit/gauss_final_2.mat');
 
 plotPsycurve(subject1, paraSub1, weibullFit1, 'Subject 1:');
+
+%% Combined Subject
+combined = [subject1, subject2, subject3, subject4, subject5];
+load('CombinedFit/combinedGauss.mat');
+load('CombinedFit/combinedWeibull.mat');
+
+plotPsycurve(combined, paraSub, weibullFitCombined, 'Combined Subject');
 
 %% Helper function
 function plotPsycurve(subData, modelPara, weibullPara, titleText)
@@ -68,11 +75,11 @@ for i = 1 : length(cTest)
         [testSpeed, ~, idxC] = uniquetol(testData(1, :), 1e-4);
         resProb = zeros(1, length(testSpeed));
         dataCount = zeros(1, length(testSpeed));
-        scale = 5;
+        scale = 4;
         for idx = 1:length(testSpeed)
             resProb(idx) = mean(testData(2, idxC' == idx));
             dataCount(idx) = sum(idxC' == idx);
-        end        
+        end
         
         subplot(6, 6, index((i-1) * 6 + j));
         if(sum(dataCount) > 0)
@@ -86,20 +93,21 @@ for i = 1 : length(cTest)
                 dPrime = (meanTest - meanRef) / sqrt((stdTest ^ 2 + stdRef ^ 2) / 2);
                 pLgrBayes(k) = 0.5 * erfc(-0.5 * dPrime);
             end
-                        
+            
             plot(v2, pLgrWeibull, 'r', 'LineWidth', 1.5); hold on;
-            plot(v2, pLgrBayes,   'b', 'LineWidth', 1.5);            
+            plot(v2, pLgrBayes,   'b', 'LineWidth', 1.5);
         end
         
         scatter(testSpeed, resProb, dataCount * scale, 'k');
         xlim([rangeV(1) rangeV(2)]); ylim([0, 1]);
         
+        grid off; box off;
         if(i == 1)
             ylabel(sprintf('Reference Speed:\n%.1f', v1));
-        end        
+        end
         if(j == 1)
-            title(sprintf('Test Contrast:\n%g', crst2), 'FontWeight','Normal');
-        end        
+            title(sprintf('Test Contrast:\n%g', crst2), 'FontWeight', 'Normal');
+        end
         if(j == 6)
             xlabel('Test Speed [deg/sec]');
         end
