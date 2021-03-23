@@ -2,8 +2,8 @@
 try 
     plotlabOBJ = plotlab();
     plotlabOBJ.applyRecipe(...
-        'figureWidthInches', 20, ...
-        'figureHeightInches', 10);
+        'figureWidthInches', 15, ...
+        'figureHeightInches', 12);
 catch EXP
     fprintf('plotlab not available, use default MATLAB style \n');
 end
@@ -63,29 +63,39 @@ sgtitle('Contrast-dependent Noise');
 
 %%
 figure();
-subplot(1, 2, 1);
-colormap = cbrewer('div', 'Spectral', 9);
-colors = colormap([1, 2, 3, 8], :);
+colormap = cbrewer('seq', 'Blues', 9);
+colors = colormap([4, 4, 4, 4, 8], :);
 
+subplot(3, 2, 1);
 l1 = plot(log(crst), paraSub1(4:end), 'o', 'LineWidth', 1, 'MarkerEdgeColor', colors(1, :), 'MarkerFaceColor', colors(1, :)); 
 hold on; grid on;
 noise_sub1 = plot_fit(crst, paraSub1, colors(1, :), [1e4, 100, rand(1, 2)]);
+box off; grid off; ylim([0, 0.06]);
 
+subplot(3, 2, 2);
 l2 = plot(log(crst), paraSub2(4:end), 'o', 'LineWidth', 1, 'MarkerEdgeColor', colors(2, :), 'MarkerFaceColor', colors(2, :));
 hold on; grid on;
 noise_sub2 = plot_fit(crst, paraSub2, colors(2, :), [1e4, 100, rand(1, 2)]);
+box off; grid off; ylim([0, 0.06]);
 
+subplot(3, 2, 3);
 l4 = plot(log(crst), paraSub4(4:end), 'o', 'LineWidth', 1, 'MarkerEdgeColor', colors(3, :), 'MarkerFaceColor', colors(3, :));
 hold on; grid on;
 noise_sub4 = plot_fit(crst, paraSub4, colors(3, :), [1e4, 100, rand(1, 2)]);
+box off; grid off; ylim([0, 0.06]);
 
+subplot(3, 2, 4);
 l5 = plot(log(crst), paraSub5(4:end), 'o', 'LineWidth', 1, 'MarkerEdgeColor', colors(4, :), 'MarkerFaceColor', colors(4, :));
 hold on; grid on;
 noise_sub5 = plot_fit(crst, paraSub5, colors(4, :), [1e4, 100, rand(1, 2)]);
+box off; grid off; ylim([0, 0.06]);
 
-box off; grid off;
-xlabel('Contrast');
-ylabel('Noise SD');
+load('CombinedFit/combinedMapping.mat');
+subplot(3, 2, 5);
+plot(log(crst), paraSub(4:end), 'o', 'LineWidth', 1, 'MarkerEdgeColor', colors(5, :), 'MarkerFaceColor', colors(5, :));
+hold on; grid on;
+noise_sub = plot_fit(crst, paraSub, colors(5, :), [1e4, 100, rand(1, 2)]);
+box off; grid off; ylim([0, 0.06]);
 
 %% 
 subplot(1, 2, 2);
@@ -106,7 +116,7 @@ noise_sub4 = plot_fit_(crst, 1 ./ paraSub4, colors(3, :), [1e4, 100, rand(1, 2)]
 
 l5 = plot(log(crst), 1 ./ paraSub5(4:end), 'o', 'LineWidth', 1, 'MarkerEdgeColor', colors(4, :), 'MarkerFaceColor', colors(4, :));
 hold on; grid on;
-noise_sub5 = plot_fit_(crst, 1 ./ paraSub5, colors(4, :), [1e4, 100, rand(1, 2)]);
+noise_sub = plot_fit_(crst, 1 ./ paraSub5, colors(4, :), [1e4, 100, rand(1, 2)]);
 
 box off; grid off;
 xlabel('Contrast');
