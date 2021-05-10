@@ -2,8 +2,8 @@
 try
     plotlabOBJ = plotlab();
     plotlabOBJ.applyRecipe(...
-        'figureWidthInches', 32, ...
-        'figureHeightInches', 16);
+        'figureWidthInches', 24, ...
+        'figureHeightInches', 18);
 catch EXP
     fprintf('plotlab not available, use default MATLAB style \n');
 end
