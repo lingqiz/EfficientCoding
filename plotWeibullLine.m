@@ -20,7 +20,7 @@ for i = 1 : length(testCrst)
     end
     weibullLine(i) = errorbar(log(vRef)+shiftOffset(i), ...
         allEstimate(1, :), allEstimate(1, :)-allEstimate(3, :), allEstimate(2, :)-allEstimate(1, :),...
-        '--o', 'Color', colors(i, :));
+        '--o', 'Color', colors(i, :), 'LineWidth', 1.5);
 end
 legend(weibullLine, arrayfun(@num2str, testCrst, 'UniformOutput', false));
 xlim([-1, 2.6]);

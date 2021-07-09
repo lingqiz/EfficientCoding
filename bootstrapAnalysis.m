@@ -1,10 +1,10 @@
 %% Bootstrap (load data beforehand)
-load('./NN2006/SUB4.mat');
+load('./NN2006/SUB5.mat');
 load('./GaussFit/gauss_final_2.mat');
 
-subject = subject4;
-paraSub = paraSub4;
-subjectIdx = 4;
+subject = subject5;
+paraSub = paraSub5;
+subjectIdx = 5;
 
 [sumLL, fitResults] = weibullFit(subject);
 [biasLC_data, biasHC_data, thLC_data, thHC_data] = extractPsychcurve(fitResults, false);
