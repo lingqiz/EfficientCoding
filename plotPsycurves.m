@@ -19,7 +19,7 @@ load(strcat(dataDir, 'SUB5.mat'));
 load('./weibullFitAll.mat');
 load('./GaussFit/gauss_final_2.mat');
 
-plotPsycurve(subject1, paraSub1, weibullFit1, 'Subject 1:');
+plotPsycurve(subject5, paraSub5, weibullFit5, 'Subject 5:');
 
 %% Combined Subject
 combined = [subject1, subject2, subject3, subject4, subject5];
@@ -75,7 +75,7 @@ for i = 1 : length(cTest)
         [testSpeed, ~, idxC] = uniquetol(testData(1, :), 1e-4);
         resProb = zeros(1, length(testSpeed));
         dataCount = zeros(1, length(testSpeed));
-        scale = 4;
+        scale = 10;
         for idx = 1:length(testSpeed)
             resProb(idx) = mean(testData(2, idxC' == idx));
             dataCount(idx) = sum(idxC' == idx);

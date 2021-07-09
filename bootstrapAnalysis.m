@@ -1,10 +1,10 @@
 %% Bootstrap (load data beforehand)
-load('./NN2006/SUB1.mat');
+load('./NN2006/SUB4.mat');
 load('./GaussFit/gauss_final_2.mat');
 
-subject = subject1;
-paraSub = paraSub1;
-subjectIdx = 1;
+subject = subject4;
+paraSub = paraSub4;
+subjectIdx = 4;
 
 [sumLL, fitResults] = weibullFit(subject);
 [biasLC_data, biasHC_data, thLC_data, thHC_data] = extractPsychcurve(fitResults, false);
@@ -45,7 +45,7 @@ prior = @(support) (1.0 ./ ((abs(support) .^ c0) + c1) + c2) * nrmConst;
 figure; hold on;
 addpath('./cbrewer/');
 colormap = cbrewer('seq', 'Greys', 9);
-colors = colormap([9, 7, 6, 5, 3], :);
+colors = colormap(flip([9, 7, 6, 5, 3]), :);
 
 plotBiasBayes(prior, noiseLevel, 0.075, colors);
 plotWeibullLine(biasLC_data, allBiasLC, nBootstrap, colors);
