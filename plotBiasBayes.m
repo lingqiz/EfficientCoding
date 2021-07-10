@@ -6,7 +6,7 @@ estVRef = @(vRef) efficientEstimator(prior, baseNoise, vRef);
 estiVRef = arrayfun(estVRef, vRef);
 
 testCrst = [0.05, 0.1, 0.2, 0.4, 0.8];
-shiftOffset = -0.025:0.0125:0.025;
+shiftOffset = (-0.025:0.0125:0.025) * 0.0;
 
 for i = 1 : length(testCrst)
     vTest = 0.05 : 0.005 : 24; baseNoise = noiseLevel(crstLevel == testCrst(i));

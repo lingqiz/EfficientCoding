@@ -1,10 +1,10 @@
 %% Bootstrap (load data beforehand)
-load('./NN2006/SUB5.mat');
+load('./NN2006/SUB1.mat');
 load('./GaussFit/gauss_final_2.mat');
 
-subject = subject5;
-paraSub = paraSub5;
-subjectIdx = 5;
+subject = subject1;
+paraSub = paraSub1;
+subjectIdx = 1;
 
 [sumLL, fitResults] = weibullFit(subject);
 [biasLC_data, biasHC_data, thLC_data, thHC_data] = extractPsychcurve(fitResults, false);
@@ -51,16 +51,29 @@ plotBiasBayes(prior, noiseLevel, 0.075, colors);
 plotWeibullLine(biasLC_data, allBiasLC, nBootstrap, colors);
 xlabel('Speed V [deg/sec]'); ylabel('Matching Speed: $\frac{V_{1}}{V_{0}}$', 'Interpreter', 'latex');
 xticks(log(vRef)); xticklabels(arrayfun(@num2str, vRef, 'UniformOutput', false));
-title(sprintf('Subject %d Matching Speed - Low Contrast', subjectIdx));
+
+% title(sprintf('Subject %d Matching Speed - Low Contrast', subjectIdx));
 ylim([0.2, 1.6]);
+set(gca,'TickDir','out')
+xlabel(''); ylabel('');
+set(gca, 'FontSize', 18);
+ax = gca; k = 0.01;
+ax.TickLength = 2 * [k, k]; % Make tick marks longer.
+ax.LineWidth = 100 * k;
 
 figure; hold on;
 plotBiasBayes(prior, noiseLevel, 0.5, colors);
 plotWeibullLine(biasHC_data, allBiasHC, nBootstrap, colors);
 xlabel('Speed V [deg/sec]'); ylabel('Matching Speed: $\frac{V_{1}}{V_{0}}$', 'Interpreter', 'latex');
 xticks(log(vRef)); xticklabels(arrayfun(@num2str, vRef, 'UniformOutput', false));
-title(sprintf('Subject %d Matching Speed - High Contrast', subjectIdx));
+% title(sprintf('Subject %d Matching Speed - High Contrast', subjectIdx));
 ylim([0.6, 2.2]);
+set(gca,'TickDir','out')
+xlabel(''); ylabel('');
+set(gca, 'FontSize', 18);
+ax = gca; k = 0.01;
+ax.TickLength = 2 * [k, k]; % Make tick marks longer.
+ax.LineWidth = 100 * k;
 
 %% Threshold
 figure; hold on;
@@ -79,7 +92,10 @@ if relative
     yticklabels(arrayfun(@(x)num2str(x, '%.2f'), yticks, 'UniformOutput', false));
     ylabel('Weber Fraction');
 elseif logSpace
-    yticklabels(arrayfun(@(x)num2str(x, '%.2f'), exp(yticks), 'UniformOutput', false));
+    y_lim = ylim();
+    y_tick = linspace(y_lim(1), y_lim(2), ceil(length(yticks) / 2));
+    yticks(y_tick);
+    yticklabels(arrayfun(@(x)num2str(x, '%.2f'), exp(y_tick), 'UniformOutput', false));
     ylabel('Threshold');
 else
     ylim([0, 4]);
@@ -90,12 +106,18 @@ if (~logSpace) && (~relative)
     xlabel('Speed V [deg/sec]');
     xticks(vProb);
     xticklabels(arrayfun(@num2str, vProb, 'UniformOutput', false));
-    legend([t1, t2], {'0.075', '0.5'});
-    title(sprintf('Subject %d Threshold', subjectIdx));
+%     legend([t1, t2], {'0.075', '0.5'});
+%     title(sprintf('Subject %d Threshold', subjectIdx));
 else
     xlabel('Speed V [deg/sec]');
     xticks(log(vProb));
     xticklabels(arrayfun(@num2str, vProb, 'UniformOutput', false));
-    legend([t1, t2], {'0.075', '0.5'});
-    title(sprintf('Subject %d Threshold', subjectIdx));    
+%     legend([t1, t2], {'0.075', '0.5'});
+%     title(sprintf('Subject %d Threshold', subjectIdx));
 end
+set(gca,'TickDir','out')
+xlabel(''); ylabel('');
+set(gca, 'FontSize', 18);
+ax = gca; k = 0.01;
+ax.TickLength = 2 * [k, k]; % Make tick marks longer
+ax.LineWidth = 100 * k;
