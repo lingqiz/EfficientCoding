@@ -19,9 +19,9 @@ vub = [c0UB c1UB ones(1, crstLevel) * noiseUB];
 % Optimization
 opts = optimset('fminsearch');
 opts.Display = 'iter';
-opts.TolX = 1.e-3;
-opts.TolFun = 1.e-3;
-opts.MaxFunEvals = 5000;
+opts.TolX = 1.e-5;
+opts.TolFun = 1.e-5;
+opts.MaxFunEvals = 2500;
 
 %% Gamma prior, individual subject
 paraInit = [c0Init, c1Init, rand(1, crstLevel)+0.1];

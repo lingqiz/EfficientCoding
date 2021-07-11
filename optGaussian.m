@@ -19,9 +19,9 @@ paraInit = [c0Init, paraSub(4:end)];
 % Optimization
 opts = optimset('fminsearch');
 opts.Display = 'iter';
-opts.TolX = 1.e-3;
-opts.TolFun = 1.e-3;
-opts.MaxFunEvals = 5000;
+opts.TolX = 1.e-5;
+opts.TolFun = 1.e-5;
+opts.MaxFunEvals = 2500;
 
 %% Gaussian prior, individual subject
 objFunc1 = @(para)costfuncWrapperGauss(subject1, para);
